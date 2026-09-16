@@ -1,0 +1,1124 @@
+<!doctype html>
+<!--
+  ЭСЕП ЖУМУШЧУ — калькулятор заработной платы работника Кыргызской Республики
+  © 2026 AN Consulting (Асель Мамарасулова). Методика и справочники — авторская работа.
+  WhatsApp: +996 550 650 033
+-->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Калькулятор зарплаты работника Кыргызской Республики: подоходный налог по статье 200 НК КР, страховые взносы, минимальная база по среднемесячной зарплате района, все категории работников.">
+<meta name="theme-color" content="#1C2541">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Эсеп Жумушчу — калькулятор зарплаты работника КР">
+<meta property="og:description" content="Считает зарплату, взносы в Соцфонд и подоходный налог по нормам 2026 года с разбором каждой строки.">
+<meta property="og:locale" content="ru_RU">
+<meta name="author" content="AN Consulting — Асель Мамарасулова">
+</head>
+<body>
+<title>Эсеп Жумушчу</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;600&family=Golos+Text:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#F6F2E9; --sheet:#FFFDF8; --sheet-2:#FAF6EC;
+  --ink:#16203A; --ink-2:#4B5570; --ink-3:#818AA0;
+  --line:#E2DACA; --line-2:#CDC3AE;
+  --copper:#9A6A1C; --copper-soft:#F6E9CD;
+  --teal:#2F6D5B; --teal-soft:#DDEBE3;
+  --warn:#8A6A12; --warn-soft:#F7EDD2;
+  --band:#1C2541;
+  --radius:10px;
+  --maxw:1120px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0E1424; --sheet:#161E33; --sheet-2:#131A2C;
+    --ink:#ECEAE2; --ink-2:#B4BACB; --ink-3:#868DA3;
+    --line:#26304A; --line-2:#333E5C;
+    --copper:#DFB45F; --copper-soft:#2E2718;
+    --teal:#71BFA2; --teal-soft:#152A25;
+    --warn:#D9B45C; --warn-soft:#2E2718;
+    --band:#0B1326;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0E1424; --sheet:#161E33; --sheet-2:#131A2C;
+  --ink:#ECEAE2; --ink-2:#B4BACB; --ink-3:#868DA3;
+  --line:#26304A; --line-2:#333E5C;
+  --copper:#DFB45F; --copper-soft:#2E2718;
+  --teal:#71BFA2; --teal-soft:#152A25;
+  --warn:#D9B45C; --warn-soft:#2E2718;
+  --band:#0B1326;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Golos Text","Segoe UI",system-ui,sans-serif; font-size:16px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{font-family:Bitter,Georgia,"Times New Roman",serif; font-weight:600; margin:0; text-wrap:balance; letter-spacing:-.01em}
+h1{font-size:clamp(28px,4.6vw,44px); line-height:1.15}
+h2{font-size:clamp(21px,2.6vw,28px)}
+h3{font-size:17px}
+p{margin:0}
+a{color:var(--copper)}
+.wrap{max-width:var(--maxw); margin:0 auto; padding-inline:18px}
+.eyebrow{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); font-weight:600}
+.num{font-variant-numeric:tabular-nums}
+
+/* ── шапка ── */
+.hero{background:var(--band); color:#EFEDE4; padding-block:clamp(30px,6vw,58px) clamp(26px,5vw,44px)}
+.hero h1{color:#FFF}
+.hero h1 em{font-style:normal; color:#D8A94A}
+.hero p{color:#B9C0D4; max-width:62ch; margin-top:12px}
+.hero .wrap{display:grid; gap:18px}
+.brandline{display:flex; align-items:center; gap:10px; flex-wrap:wrap; color:#96A0BC; font-size:13px}
+.brandline b{color:#EFEDE4}
+.topline{display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap}
+.langs{display:flex; gap:6px}
+.lang{font:inherit; font-size:13px; padding:5px 12px; border-radius:999px; cursor:pointer;
+  background:transparent; color:#96A0BC; border:1px solid #33406A}
+.lang[aria-pressed="true"]{background:#D8A94A; color:#1C2541; border-color:#D8A94A; font-weight:600}
+.lang:focus-visible{outline:2px solid #D8A94A; outline-offset:2px}
+.facts{display:flex; gap:26px; flex-wrap:wrap; margin-top:6px}
+.fact{border-left:2px solid #D8A94A; padding-left:12px}
+.fact b{display:block; font-family:Bitter,Georgia,serif; font-size:21px; color:#FFF}
+.fact span{font-size:12.5px; color:#96A0BC}
+
+/* ── рабочая зона ── */
+.work{padding-block:clamp(26px,4vw,40px)}
+.grid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.05fr); gap:22px; align-items:start}
+@media (max-width:900px){ .grid{grid-template-columns:1fr} }
+
+.panel{background:var(--sheet); border:1px solid var(--line); border-radius:var(--radius)}
+.panel > .ph{padding:14px 18px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap}
+.panel > .pb{padding:16px 18px}
+
+.tabs{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:20px}
+@media (max-width:640px){ .tabs{grid-template-columns:repeat(2,1fr)} }
+.tab{display:flex; flex-direction:column; align-items:center; gap:7px; padding:14px 8px; cursor:pointer;
+  background:transparent; border:1px dashed var(--line-2); border-radius:var(--radius); color:var(--ink-3);
+  font:inherit; font-size:13.5px; font-weight:500; line-height:1.25; text-align:center; opacity:.55;
+  transition:opacity .15s ease, background .15s ease}
+.tab svg{width:30px; height:30px; color:var(--ink-3)}
+.tab:hover{opacity:.9; background:var(--sheet)}
+.tab[aria-selected="true"]{opacity:1; background:var(--band); border:1px solid var(--band); color:#FFF; font-weight:600;
+  box-shadow:var(--shadow, 0 6px 18px -10px rgba(16,24,58,.45))}
+.tab[aria-selected="true"] svg{color:#D8A94A}
+.tab[aria-selected="true"]::after{content:""; width:26px; height:2px; background:#D8A94A; border-radius:2px}
+.tab:focus-visible{outline:2px solid var(--copper); outline-offset:2px}
+.tabs-note{font-size:12.5px; color:var(--ink-3); margin:-10px 0 18px}
+.mhead{display:grid; grid-template-columns:76px 1fr 72px 72px; gap:6px; font-size:11px; color:var(--ink-3); padding:0 2px 4px}
+.mrow{display:grid; grid-template-columns:76px 1fr 72px 72px; gap:6px; margin-bottom:6px; align-items:center}
+.mrow .mlab{font-size:12px; color:var(--ink-3)}
+.mrow input{padding:7px 8px; font-size:14px}
+@media (max-width:520px){ .mhead{display:none} .mrow{grid-template-columns:1fr 1fr 1fr; } .mrow .mlab{grid-column:1/-1} }
+.art{display:flex; align-items:center; gap:14px}
+.art svg{width:44px; height:44px; flex:none}
+.art-otp svg{color:#2E86A8} .art-bol svg{color:#B03A3A} .art-dek svg{color:#9A5BA6}
+.modes{display:flex; gap:0; margin-bottom:14px; border:1px solid var(--line-2); border-radius:8px; overflow:hidden}
+.mode{flex:1; font:inherit; font-size:13.5px; padding:9px 10px; cursor:pointer; background:var(--sheet-2); color:var(--ink-2); border:0}
+.mode + .mode{border-left:1px solid var(--line-2)}
+.mode[aria-pressed="true"]{background:var(--band); color:#EFEDE4; font-weight:600}
+.mode:focus-visible{outline:2px solid var(--copper); outline-offset:-2px}
+.fields{display:grid; gap:12px}
+.f{display:grid; gap:5px}
+.f label{font-size:13px; color:var(--ink-2); font-weight:500}
+.f .hint{font-size:11.5px; color:var(--ink-3); line-height:1.45}
+input,select{
+  width:100%; font:inherit; font-size:15px; color:var(--ink); background:var(--sheet-2);
+  border:1px solid var(--line-2); border-radius:8px; padding:9px 11px; font-variant-numeric:tabular-nums;
+}
+input:focus-visible,select:focus-visible{outline:2px solid var(--copper); outline-offset:1px}
+input:disabled,select:disabled{opacity:.42; cursor:not-allowed}
+.row2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+@media (max-width:460px){ .row2{grid-template-columns:1fr} }
+details.more{border-top:1px dashed var(--line); margin-top:4px; padding-top:12px}
+details.more summary{cursor:pointer; font-size:13.5px; color:var(--copper); font-weight:500; list-style:none}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::before{content:"+ "; font-weight:600}
+details.more[open] summary::before{content:"− "}
+details.more .fields{margin-top:12px}
+
+/* ── расчётный лист ── */
+.sheet{background:var(--sheet); border:1px solid var(--line-2); border-radius:var(--radius); overflow:hidden; position:sticky; top:env(safe-area-inset-top, 0px)}
+@media (max-width:900px){ .sheet{position:static} }
+.sheet-head{background:var(--sheet-2); padding:14px 18px; border-bottom:1px solid var(--line)}
+.sheet-head .who{font-family:Bitter,Georgia,serif; font-size:17px}
+.sheet-head .meta{font-size:12.5px; color:var(--ink-3); margin-top:2px}
+.lines{padding:6px 18px 12px}
+.line{display:flex; align-items:baseline; gap:8px; padding:7px 0; border-bottom:1px dotted var(--line)}
+.line:last-child{border-bottom:0}
+.line .t{flex:1; font-size:14px; color:var(--ink-2)}
+.line .v{font-variant-numeric:tabular-nums; font-weight:600; font-size:15px; white-space:nowrap}
+.line .why{flex-basis:100%; font-size:11.5px; color:var(--ink-3); margin-top:-2px}
+.line.sub .t{padding-left:14px; color:var(--ink-3); font-size:13px}
+.line.tot{border-top:2px solid var(--ink); border-bottom:0; margin-top:6px; padding-top:10px}
+.line.tot .t{font-weight:600; color:var(--ink); font-size:15px}
+.line.tot .v{font-size:19px; font-family:Bitter,Georgia,serif}
+.group-h{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); font-weight:600; padding:14px 0 2px; border-bottom:1px solid var(--line)}
+.stamp{margin:0 18px 18px; border:2px solid var(--copper); border-radius:8px; background:var(--copper-soft); padding:12px 14px; display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap}
+.stamp .l{font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--copper); font-weight:600}
+.stamp .s{font-family:Bitter,Georgia,serif; font-size:clamp(24px,4vw,32px); font-variant-numeric:tabular-nums; color:var(--ink)}
+.note{margin:0 18px 16px; border-left:3px solid var(--warn); background:var(--warn-soft); color:var(--ink); padding:9px 12px; font-size:13px; border-radius:0 6px 6px 0}
+.note.teal{border-left-color:var(--teal); background:var(--teal-soft)}
+
+/* ── секции ── */
+.sec{padding-block:clamp(28px,4.5vw,46px); border-top:1px solid var(--line)}
+.sec.alt{background:var(--sheet-2)}
+.sec h2 + p{margin-top:10px; color:var(--ink-2); max-width:70ch}
+.steps{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px; margin-top:22px}
+.step{border-top:2px solid var(--teal); padding-top:12px}
+.step .n{font-size:11px; letter-spacing:.12em; color:var(--teal); font-weight:600}
+.step h3{margin:4px 0 6px}
+.step p{font-size:14px; color:var(--ink-2)}
+.law{margin-top:22px; display:grid; gap:0; border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; background:var(--sheet)}
+.law div{display:grid; grid-template-columns:minmax(150px,220px) 1fr; gap:14px; padding:11px 16px; border-bottom:1px solid var(--line); font-size:14px}
+.law div:last-child{border-bottom:0}
+.law b{font-weight:600; color:var(--ink)}
+.law span{color:var(--ink-2)}
+@media (max-width:620px){ .law div{grid-template-columns:1fr; gap:3px} }
+.cta{display:flex; gap:12px; flex-wrap:wrap; margin-top:20px; align-items:center}
+.btn{display:inline-block; background:var(--copper); color:#FFF; text-decoration:none; padding:11px 20px; border-radius:8px; font-weight:600; font-size:15px}
+.btn.ghost{background:transparent; color:var(--copper); border:1px solid var(--copper)}
+footer{background:var(--band); color:#96A0BC; padding-block:26px; font-size:13px}
+footer b{color:#EFEDE4}
+footer a{color:#D8A94A}
+@media (prefers-reduced-motion:reduce){ *{animation:none!important; transition:none!important} }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="topline">
+      <div class="brandline"><b>AN Consulting</b> · <span data-i18n="brand"></span></div>
+      <div class="langs" role="group" aria-label="Тил / Language">
+        <button type="button" class="lang" data-lang="ru">Рус</button>
+        <button type="button" class="lang" data-lang="kg">Кыр</button>
+        <button type="button" class="lang" data-lang="en">Eng</button>
+      </div>
+    </div>
+    <h1 data-i18n="h1"></h1>
+    <p data-i18n="lead"></p>
+    <div class="facts">
+      <div class="fact"><b>65</b><span data-i18n="fact1"></span></div>
+      <div class="fact"><b>14</b><span data-i18n="fact2"></span></div>
+      <div class="fact"><b>767</b><span data-i18n="fact3"></span></div>
+      <div class="fact"><b data-i18n="fact4b"></b><span data-i18n="fact4"></span></div>
+    </div>
+  </div>
+</header>
+
+<main class="work">
+  <div class="wrap">
+    <nav class="tabs" role="tablist" aria-label="Калькуляторы">
+      <button type="button" class="tab" data-tab="pay" role="tab"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="8" width="26" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="16" cy="16" r="4.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M7 12v8M25 12v8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg><span data-i18n="tab_pay"></span></button>
+      <button type="button" class="tab" data-tab="otp" role="tab"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="24" cy="8" r="3.4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4 17c5.5-9 14.5-9 20 0z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 17v9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M2 27c2.2 0 2.2-1.6 4.4-1.6S8.6 27 10.8 27s2.2-1.6 4.4-1.6S17.4 27 19.6 27s2.2-1.6 4.4-1.6S26.2 27 30 27" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span data-i18n="tab_otp"></span></button>
+      <button type="button" class="tab" data-tab="bol" role="tab"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M16 9.5v13M9.5 16h13" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg><span data-i18n="tab_bol"></span></button>
+      <button type="button" class="tab" data-tab="dek" role="tab"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="15.5" cy="6.4" r="3.1" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M14 10.2c-2.4.5-3.6 2.4-3.9 5l-.5 4.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M14.2 10.2c3.9 0 6.9 2.9 6.9 6.5s-2.6 5.6-6.3 5.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M14.8 22.3 13.6 30M10.4 22l-1.6 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span data-i18n="tab_dek"></span></button>
+    </nav>
+    <p class="tabs-note" data-i18n="tabs_note"></p>
+  </div>
+  <div class="wrap grid" id="paneWage">
+    <section class="panel" aria-label="Данные для расчёта">
+      <div class="ph"><h2 data-i18n="h_data"></h2><span class="eyebrow" data-i18n="h_data_note"></span></div>
+      <div class="pb">
+        <div class="modes" role="group">
+          <button type="button" class="mode" id="modeFwd" data-mode="fwd" data-i18n="m_fwd"></button>
+          <button type="button" class="mode" id="modeBack" data-mode="back" data-i18n="m_back"></button>
+        </div>
+        <div class="fields">
+          <div class="f" id="wrapNet" hidden>
+            <label for="netTarget" data-i18n="l_netTarget"></label>
+            <input id="netTarget" type="number" inputmode="decimal" min="0" step="0.01" value="20000">
+            <span class="hint" data-i18n="h_netTarget"></span>
+          </div>
+          <div class="f">
+            <label for="region" data-i18n="l_region"></label>
+            <select id="region"></select>
+            <span class="hint" id="smzHint"></span>
+          </div>
+          <div class="f">
+            <label for="cat" data-i18n="l_cat"></label>
+            <select id="cat"></select>
+          </div>
+          <div class="f">
+            <label for="regime" data-i18n="l_regime"></label>
+            <select id="regime"></select>
+          </div>
+          <div class="f">
+            <label for="forma" data-i18n="l_forma"></label>
+            <select id="forma">
+              <option value="oklad">Месячный оклад</option>
+              <option value="chas">Часовая тарифная ставка</option>
+              <option value="den">Дневная тарифная ставка</option>
+              <option value="sdel">Сдельная оплата</option>
+              <option value="summa">Готовая сумма начисления</option>
+            </select>
+          </div>
+          <div class="f" id="wrapOklad">
+            <label for="oklad" id="okladLab"></label>
+            <input id="oklad" type="number" inputmode="decimal" min="0" step="0.01" value="25000">
+          </div>
+          <div class="row2">
+            <div class="f"><label for="normaDn" data-i18n="l_normaDn"></label><input id="normaDn" type="number" min="1" step="1" value="22"></div>
+            <div class="f"><label for="faktDn" data-i18n="l_faktDn"></label><input id="faktDn" type="number" min="0" step="1" value="22"></div>
+          </div>
+          <div class="row2">
+            <div class="f"><label for="normaCh" data-i18n="l_normaCh"></label><input id="normaCh" type="number" min="1" step="0.5" value="176"></div>
+            <div class="f"><label for="faktCh" data-i18n="l_faktCh"></label><input id="faktCh" type="number" min="0" step="0.5" value="176"></div>
+          </div>
+          <div class="row2" id="wrapSdel">
+            <div class="f"><label for="sdelKol" data-i18n="l_sdelKol"></label><input id="sdelKol" type="number" min="0" step="0.01" value="0"></div>
+            <div class="f"><label for="sdelCena" data-i18n="l_sdelCena"></label><input id="sdelCena" type="number" min="0" step="0.01" value="0"></div>
+          </div>
+          <div class="f"><label for="ijd" data-i18n="l_ijd"></label><input id="ijd" type="number" min="0" step="1" value="0"></div>
+        </div>
+
+        <details class="more">
+          <summary data-i18n="s_dop"></summary>
+          <div class="fields">
+            <div class="row2">
+              <div class="f"><label for="sv1" data-i18n="l_sv1"></label><input id="sv1" type="number" min="0" step="0.5" value="0"></div>
+              <div class="f"><label for="sv2" data-i18n="l_sv2"></label><input id="sv2" type="number" min="0" step="0.5" value="0"></div>
+            </div>
+            <div class="row2">
+              <div class="f"><label for="noch" data-i18n="l_noch"></label><input id="noch" type="number" min="0" step="0.5" value="0"></div>
+              <div class="f"><label for="prazd" data-i18n="l_prazd"></label><input id="prazd" type="number" min="0" step="0.5" value="0"></div>
+            </div>
+            <div class="row2">
+              <div class="f"><label for="sovm" data-i18n="l_sovm"></label><input id="sovm" type="number" min="0" step="1" value="0"></div>
+              <div class="f"><label for="vred" data-i18n="l_vred"></label><input id="vred" type="number" min="0" step="1" value="0"></div>
+            </div>
+            <div class="row2">
+              <div class="f"><label for="stazhp" data-i18n="l_stazhp"></label><input id="stazhp" type="number" min="0" step="1" value="0"></div>
+              <div class="f"><label for="premia" data-i18n="l_premia"></label><input id="premia" type="number" min="0" step="0.01" value="0"></div>
+            </div>
+          </div>
+        </details>
+
+        <details class="more">
+          <summary data-i18n="s_high"></summary>
+          <div class="fields">
+            <div class="f">
+              <label for="rayon" data-i18n="l_rayon"></label>
+              <select id="rayon"></select>
+              <span class="hint" data-i18n="h_rayon"></span>
+            </div>
+            <div class="f">
+              <label for="village" data-i18n="l_village"></label>
+              <select id="village"></select>
+              <span class="hint" id="rkHint">районный коэффициент не применяется</span>
+            </div>
+            <div class="f"><label for="vgs" data-i18n="l_vgs"></label><input id="vgs" type="number" min="0" max="60" step="1" value="0">
+              <span class="hint" data-i18n="h_vgs"></span>
+            </div>
+            <div class="row2">
+              <div class="f"><label for="alim" data-i18n="l_alim"></label><input id="alim" type="number" min="0" max="70" step="1" value="0"></div>
+              <div class="f"><label for="prochie" data-i18n="l_prochie"></label><input id="prochie" type="number" min="0" step="0.01" value="0"></div>
+            </div>
+            <div class="row2">
+              <div class="f"><label for="avans" data-i18n="l_avans"></label><input id="avans" type="number" min="0" step="0.01" value="0"></div>
+              <div class="f"><label for="npf" data-i18n="l_npf"></label><input id="npf" type="number" min="0" step="0.01" value="0"></div>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="sheet" aria-live="polite" aria-label="Расчётный лист">
+      <div class="sheet-head">
+        <div class="who" id="shWho"></div>
+        <div class="meta" id="shMeta"></div>
+      </div>
+      <div class="lines" id="shLines"></div>
+      <div class="stamp"><span class="l" data-i18n="l_net"></span><span class="s num" id="shNet">0,00</span></div>
+      <div class="note" id="shNote" hidden></div>
+      <div class="note teal" id="shEmp"></div>
+    </section>
+  </div>
+
+  <div class="wrap grid" id="paneOtp" hidden>
+    <section class="panel">
+      <div class="ph"><h2 data-i18n="otp_h"></h2><span class="eyebrow" data-i18n="h_data_note"></span></div>
+      <div class="pb">
+        <div class="fields">
+          <div class="f"><label data-i18n="otp_period"></label>
+            <div class="mhead"><span></span><span data-i18n="c_nach"></span><span data-i18n="c_kal"></span><span data-i18n="c_prz"></span></div>
+            <div class="mrow"><span class="mlab" data-i18n="m1"></span><input id="otp_nach1" type="number" min="0" step="0.01" value="25000" aria-label="начислено"><input id="otp_kal1" type="number" min="1" step="1" value="30" aria-label="дни"><input id="otp_prz1" type="number" min="0" step="1" value="0" aria-label="праздничные"></div><div class="mrow"><span class="mlab" data-i18n="m2"></span><input id="otp_nach2" type="number" min="0" step="0.01" value="25000" aria-label="начислено"><input id="otp_kal2" type="number" min="1" step="1" value="30" aria-label="дни"><input id="otp_prz2" type="number" min="0" step="1" value="0" aria-label="праздничные"></div><div class="mrow"><span class="mlab" data-i18n="m3"></span><input id="otp_nach3" type="number" min="0" step="0.01" value="25000" aria-label="начислено"><input id="otp_kal3" type="number" min="1" step="1" value="30" aria-label="дни"><input id="otp_prz3" type="number" min="0" step="1" value="0" aria-label="праздничные"></div>
+            <span class="hint" data-i18n="otp_hint"></span>
+          </div>
+          <div class="row2">
+            <div class="f"><label for="otp_dni" data-i18n="otp_dni"></label><input id="otp_dni" type="number" min="1" step="1" value="28"></div>
+            <div class="f"><label for="otp_prz" data-i18n="otp_prz"></label><input id="otp_prz" type="number" min="0" step="1" value="0"></div>
+          </div>
+          <div class="f"><label for="otp_ijd" data-i18n="l_ijd"></label><input id="otp_ijd" type="number" min="0" step="1" value="0"></div>
+        </div>
+      </div>
+    </section>
+    <section class="sheet">
+      <div class="sheet-head art art-otp"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="24" cy="8" r="3.4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4 17c5.5-9 14.5-9 20 0z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14 17v9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M2 27c2.2 0 2.2-1.6 4.4-1.6S8.6 27 10.8 27s2.2-1.6 4.4-1.6S17.4 27 19.6 27s2.2-1.6 4.4-1.6S26.2 27 30 27" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><div><div class="who" data-i18n="otp_h"></div><div class="meta" data-i18n="otp_sub"></div></div></div>
+      <div class="lines" id="otpLines"></div>
+      <div class="stamp"><span class="l" data-i18n="l_net"></span><span class="s num" id="otpNet">0,00</span></div>
+      <div class="note teal" id="otpNote"></div>
+    </section>
+  </div>
+
+  <div class="wrap grid" id="paneBol" hidden>
+    <section class="panel">
+      <div class="ph"><h2 data-i18n="bol_h"></h2><span class="eyebrow" data-i18n="h_data_note"></span></div>
+      <div class="pb">
+        <div class="fields">
+          <div class="f"><label data-i18n="bol_period"></label>
+            <div class="mhead"><span></span><span data-i18n="c_nach"></span><span data-i18n="c_rab"></span><span></span></div>
+            <div class="mrow"><span class="mlab" data-i18n="m1"></span><input id="bol_nach1" type="number" min="0" step="0.01" value="25000" aria-label="начислено"><input id="bol_kal1" type="number" min="1" step="1" value="22" aria-label="дни"><input id="bol_prz1" type="number" min="0" step="1" value="0" aria-label="праздничные"></div><div class="mrow"><span class="mlab" data-i18n="m2"></span><input id="bol_nach2" type="number" min="0" step="0.01" value="25000" aria-label="начислено"><input id="bol_kal2" type="number" min="1" step="1" value="22" aria-label="дни"><input id="bol_prz2" type="number" min="0" step="1" value="0" aria-label="праздничные"></div><div class="mrow"><span class="mlab" data-i18n="m3"></span><input id="bol_nach3" type="number" min="0" step="0.01" value="25000" aria-label="начислено"><input id="bol_kal3" type="number" min="1" step="1" value="22" aria-label="дни"><input id="bol_prz3" type="number" min="0" step="1" value="0" aria-label="праздничные"></div>
+            <span class="hint" data-i18n="bol_hint"></span>
+          </div>
+          <div class="row2">
+            <div class="f"><label for="bol_stazh" data-i18n="bol_stazh"></label><input id="bol_stazh" type="number" min="0" step="0.5" value="6"></div>
+            <div class="f"><label for="bol_dni" data-i18n="bol_dni"></label><input id="bol_dni" type="number" min="0" step="1" value="10"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="sheet">
+      <div class="sheet-head art art-bol"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M16 9.5v13M9.5 16h13" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg><div><div class="who" data-i18n="bol_h"></div><div class="meta" data-i18n="bol_sub"></div></div></div>
+      <div class="lines" id="bolLines"></div>
+      <div class="stamp"><span class="l" data-i18n="l_net"></span><span class="s num" id="bolNet">0,00</span></div>
+      <div class="note teal" id="bolNote"></div>
+    </section>
+  </div>
+
+  <div class="wrap grid" id="paneDek" hidden>
+    <section class="panel">
+      <div class="ph"><h2 data-i18n="dek_h"></h2><span class="eyebrow" data-i18n="h_data_note"></span></div>
+      <div class="pb">
+        <div class="fields">
+          <div class="f"><label data-i18n="dek_period"></label>
+            <div class="mhead"><span></span><span data-i18n="c_nach"></span><span data-i18n="c_rab"></span><span></span></div>
+            <div class="mrow"><span class="mlab" data-i18n="m1"></span><input id="dek_nach1" type="number" min="0" step="0.01" value="25000" aria-label="начислено"><input id="dek_kal1" type="number" min="1" step="1" value="22" aria-label="дни"><input id="dek_prz1" type="number" min="0" step="1" value="0" aria-label="праздничные"></div><div class="mrow"><span class="mlab" data-i18n="m2"></span><input id="dek_nach2" type="number" min="0" step="0.01" value="25000" aria-label="начислено"><input id="dek_kal2" type="number" min="1" step="1" value="22" aria-label="дни"><input id="dek_prz2" type="number" min="0" step="1" value="0" aria-label="праздничные"></div><div class="mrow"><span class="mlab" data-i18n="m3"></span><input id="dek_nach3" type="number" min="0" step="0.01" value="25000" aria-label="начислено"><input id="dek_kal3" type="number" min="1" step="1" value="22" aria-label="дни"><input id="dek_prz3" type="number" min="0" step="1" value="0" aria-label="праздничные"></div>
+            <span class="hint" data-i18n="bol_hint"></span>
+          </div>
+          <div class="f"><label for="dek_case" data-i18n="dek_case"></label><select id="dek_case"></select></div>
+          <div class="row2">
+            <div class="f"><label for="dek_rab" data-i18n="dek_rab"></label><input id="dek_rab" type="number" min="0" step="1" value="90"></div>
+            <div class="f"><label for="dek_dop" data-i18n="dek_dop"></label>
+              <select id="dek_dop"><option value="0" data-i18n-opt="no"></option><option value="1" data-i18n-opt="yes"></option></select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="sheet">
+      <div class="sheet-head art art-dek"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="15.5" cy="6.4" r="3.1" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M14 10.2c-2.4.5-3.6 2.4-3.9 5l-.5 4.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M14.2 10.2c3.9 0 6.9 2.9 6.9 6.5s-2.6 5.6-6.3 5.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M14.8 22.3 13.6 30M10.4 22l-1.6 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><div><div class="who" data-i18n="dek_h"></div><div class="meta" data-i18n="dek_sub"></div></div></div>
+      <div class="lines" id="dekLines"></div>
+      <div class="stamp"><span class="l" data-i18n="l_net"></span><span class="s num" id="dekNet">0,00</span></div>
+      <div class="note teal" id="dekNote"></div>
+    </section>
+  </div>
+</main>
+
+<section class="sec alt">
+  <div class="wrap">
+    <span class="eyebrow" data-i18n="e_method"></span>
+    <h2 data-i18n="h_method"></h2>
+    <p data-i18n="p_method"></p>
+    <div class="steps" id="steps"></div>
+    <div class="law" id="law"></div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <span class="eyebrow">AN Consulting</span>
+    <h2 data-i18n="h_serv"></h2>
+    <p data-i18n="p_serv"></p>
+    <div class="cta">
+      <a class="btn" href="https://wa.me/996550650033" data-i18n="b_wa"></a>
+      <a class="btn ghost" href="https://mamarasulovaasel-spec.github.io/anc-calc/" data-i18n="b_edu"></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p data-i18n="foot1"></p>
+    <p style="margin-top:8px" data-i18n="foot2"></p>
+  </div>
+</footer>
+
+<script>
+const SMZ=[["Кыргызская Республика", 36047, 26212], ["Кыргызская Республика (за исключением Кумтора)", 35097, 35097], ["Баткенская область", 26662, 23900], ["Баткенский район", 23946, 23946], ["Лейлекский район", 28019, 25138], ["Кадамжайский район", 25090, 22465], ["г. Баткен", 36672, 30504], ["г.Сулюкта", 21784, 20417], ["г.Кызыл-Кия", 22398, 21315], ["Жалал-Абадская область", 31229, 24325], ["Аксыйский район", 23084, 21970], ["Алабукинский район", 39564, 20620], ["Базаркоргонский район", 22758, 21649], ["Ноокенский район", 33406, 22253], ["Сузакский район", 23854, 23554], ["Тогуз-Тороузский район", 40861, 30006], ["Токтогульский район", 29194, 27106], ["Чаткальский район", 55183, 26750], ["г.Джалал-Абад", 29658, 27435], ["г.Кара-Куль", 50642, 36718], ["г.Майлуу-Суу", 23008, 22282], ["г.Ташкомур", 22155, 15053], ["Иссык-Кульская область", 41084, 24446], ["Иссык-Кульская область (за исключением Кумтора)", 26460, 26460], ["Аксуйский район", 26763, 24754], ["Жетиогузский район", 96813, 22658], ["Жетиогузский район (за исключением Кумтора)", 24164, 24164], ["Иссык - Кульский район", 24724, 22488], ["Тонский район", 26740, 25258], ["Тюпский район", 25155, 23965], ["г.Каракол", 28986, 26582], ["г.Балыкчи", 26722, 24559], ["Нарынская область", 35205, 29380], ["Ак-Талинский район", 30688, 28370], ["Ат-Башынский район", 33317, 30902], ["Жумгальский район", 31617, 26537], ["Кочкорский район", 28888, 26643], ["Нарынский район", 33285, 26964], ["г. Нарын", 43064, 33504], ["Ошская область", 25200, 24006], ["Алайский район", 32211, 29776], ["Араванский район", 22723, 21952], ["Каракульжинский район", 25309, 24208], ["Кара-Сууский район", 24382, 23494], ["Ноокатский район", 24523, 23770], ["Узгенский район", 23665, 22576], ["Чон - Алайский район", 32430, 28950], ["Таласская область", 34068, 23659], ["Айтматовский район", 23794, 20277], ["Бакай - Атинский район", 22311, 21526], ["Манасский район", 21738, 21085], ["Таласский район", 61845, 24344], ["г.Талас", 29972, 27177], ["Чуйская область", 27819, 23829], ["Аламудунский район", 25465, 24573], ["Жайылский район", 25841, 24652], ["Кеминский район", 34592, 22109], ["Московский район", 24018, 22741], ["Панфиловский район", 26572, 25593], ["Сокулукский район", 25171, 23126], ["Ысыкатинский район", 25589, 20951], ["Чуйский район", 27435, 26218], ["г.Токмок", 26262, 24368], ["г.Бишкек", 44074, 28829], ["г.Ош", 30039, 26922]];
+const CATS=[["001", "Основной работник", 0.08, 0.02, 0, 1, 1, 1, 1, 2, 0, 0], ["001-64/69", "Основной работник, освобождён от накопительного фонда", 0.1, 0, 0, 1, 1, 1, 1, 2, 0, 0], ["003", "Работник-пенсионер", 0.08, 0, 0, 1, 1, 1, 1, 2, 0, 0], ["009", "Инвалид III группы по слуху", 0.02, 0, 1, 1, 0, 1, 1, 2, 0, 0], ["010", "Иностранный гражданин или лицо без гражданства", 0.08, 0.02, 0, 1, 1, 1, 1, 2, 0, 0], ["010-64/69", "Иностранный гражданин, освобождён от накопительного фонда", 0.1, 0, 0, 1, 1, 1, 1, 2, 0, 0], ["011", "Работник без права на вычеты", 0.08, 0.02, 0, 1, 1, 1, 1, 0, 0, 0], ["011-64/69", "Без права на вычеты, освобождён от накопительного фонда", 0.1, 0, 0, 1, 1, 1, 1, 0, 0, 0], ["100", "Инвалид I или II группы", 0.02, 0, 1, 1, 0, 1, 1, 2, 0, 0], ["101", "Участник или инвалид Великой Отечественной войны", 0.08, 0.02, 0, 1, 0, 1, 1, 2, 0, 0], ["101-64/69", "Участник ВОВ, освобождён от накопительного фонда", 0.1, 0, 0, 1, 0, 1, 1, 2, 0, 0], ["102", "Лицо, приравненное к участникам ВОВ", 0.08, 0.02, 0, 1, 0, 1, 1, 2, 0, 0], ["103", "Индивидуальный предприниматель", 0, 0, 0, 0, 0, 0, 0, 0, 0.06, 0], ["104", "Арендодатель", 0, 0, 0, 0, 0, 0, 1, 0, 0.1, 0], ["105", "Гонорар, вознаграждение по договору", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0.1], ["106", "Младший обслуживающий персонал", 0.08, 0.02, 0, 0, 0, 1, 1, 2, 0, 0], ["106-64/69", "Младший обслуживающий персонал, освобождён от накопительного фонда", 0.1, 0, 0, 0, 0, 1, 1, 2, 0, 0], ["107", "Пенсионер — младший обслуживающий персонал", 0.08, 0, 0, 0, 0, 1, 1, 2, 0, 0], ["СОВМ", "Совместитель", 0.08, 0.02, 0, 1, 0, 1, 1, 1, 0, 0], ["СОВМ-64/69", "Совместитель, освобождён от накопительного фонда", 0.1, 0, 0, 1, 0, 1, 1, 1, 0, 0]];
+const REGIMES=[["Общий режим (статья 2)", 0.1725, 0.1525, 0.6, 0, 1, 0], ["Субъект предпринимательства, НКО, ТСЖ, партия, профсоюз (статья 2-2)", 0.0225, 0.0125, 1.0, 0, 1, 0], ["Швейная и текстильная промышленность (статья 2-1)", 0.02, 0.02, 0, 0.4, 0, 0.01], ["Сельскохозяйственный кооператив (статья 5-1)", 0.02, 0.02, 0, 0, 0, 0.1], ["Крестьянское хозяйство — юридическое лицо", 0.0225, 0.0125, 1.0, 0, 1, 0], ["Бюджетная организация, государственное предприятие", 0.1725, 0.1525, 0, 0, 0, 0], ["Дипломатическая служба и загранучреждения", 0.1525, 0.1525, 0.6, 0, 1, 0]];
+const REGIONS={"Баткенский район": [["Ак-Оток", 1.1, "399"], ["Ак-Сай", 1.1, "399"], ["Ак-Татыр", 1.1, "399"], ["Ак-Турпак", 1.1, "399"], ["Апкан", 1.1, "399"], ["Базар-Башы", 1.1, "399"], ["Баткен", 1.1, "399"], ["Беджей", 1.1, "399"], ["Боз-Адыр", 1.1, "399"], ["Бужум", 1.1, "399"], ["Булак-Башы", 1.2, "398"], ["Булак-Башы Калта-Була", 1.1, "399"], ["Газ", 1.1, "399"], ["Говсувар", 1.1, "399"], ["Джаны-Бак", 1.1, "399"], ["Джаны-Жер", 1.1, "399"], ["Джоопая", 1.1, "399"], ["Догмон", 1.2, "398"], ["Достук", 1.1, "399"], ["Жанырык", 1.1, "399"], ["Жиптик", 1.8, "398"], ["Зар-Таш", 1.1, "399"], ["Зардалы", 1.2, "398"], ["Кайынды", 1.1, "398"], ["Кан Сарталы", 1.1, "399"], ["Капчыгай", 1.1, "399"], ["Кара-Бак", 1.1, "399"], ["Кара-Булак", 1.1, "399"], ["Кара-Токой", 1.1, "399"], ["Каравшин", 1.4, "398"], ["Каспидан", 1.1, "399"], ["Кек-Таш", 1.1, "399"], ["Кек-Таш Шакча", 1.1, "399"], ["Коргон", 1.2, "398"], ["Коргон-Таш", 1.1, "399"], ["Коче-Бою", 1.1, "399"], ["Коче-Карын", 1.1, "399"], ["Кызыл-Бель", 1.1, "399"], ["Кызыл-Джол Тегермен-Ба", 1.1, "399"], ["Кыштут", 1.1, "399"], ["Мехнатабад", 1.1, "399"], ["Паскы-Арык", 1.1, "399"], ["Рават", 1.1, "399"], ["Сай", 1.1, "399"], ["Самаркандек", 1.1, "399"], ["Сары-Талаа", 1.2, "399"], ["Сары-Талаа", 1.2, "399"], ["Согмент", 1.1, "399"], ["Сымат", 1.5, "398"], ["Табылгы", 1.1, "399"], ["Таштумшук", 1.2, "399"], ["Таян", 1.1, "399"], ["Тенге", 1.1, "399"], ["Тунук-Суу", 1.1, "399"], ["Уч-Дебе", 1.1, "399"], ["Чарбак", 1.2, "399"], ["Чек", 1.1, "399"], ["Чет-Кызыл", 1.1, "399"], ["Чон-Гара", 1.1, "399"], ["Чон-Талаа", 1.1, "399"], ["Ширеш", 1.1, "399"]], "Кадамджайский район": [["Айдаркен", 1.2, "398"], ["Джал", 1.3, "сумма"], ["Джаны-Коргон", 1.2, "398"], ["Кара-Шоро", 1.1, "398"], ["Кетерме", 1.1, "398"], ["Кичи-Айдаркен", 1.2, "398"], ["Лангар", 1.3, "399"], ["Тамаша", 1.15, "сумма"], ["Тескей", 1.1, "398"], ["Шак-Шак", 1.3, "сумма"], ["Эгин-Джай", 1.05, "399"], ["Эшме", 1.1, "398"]], "Лейлекский район": [["17-й Шурф", 1.1, "399"], ["Ай-Кол", 1.1, "399"], ["Ак-Булак", 1.1, "399"], ["Ак-Суу", 1.1, "399"], ["Ак-Терек", 1.1, "399"], ["Ак-Чечек", 1.1, "399"], ["Алга Джар", 1.1, "399"], ["Андарак", 1.1, "399"], ["Арка", 1.1, "399"], ["Белео", 1.1, "399"], ["Берк-Суу", 1.1, "398"], ["Беш-Бала", 1.1, "399"], ["Бешкент", 1.1, "399"], ["Булак-Башы", 1.1, "399"], ["Булак-Башы Куру-Сай", 1.1, "399"], ["Голбо", 1.1, "399"], ["Джаны-Джер Центральная", 1.1, "399"], ["Джаны-Джол Чурбек", 1.1, "399"], ["Джаны-Турмуш", 1.1, "399"], ["Джениш", 1.1, "399"], ["Динау", 1.1, "399"], ["Им. Карла Маркса", 1.1, "399"], ["Им. Ленина", 1.1, "399"], ["Интернацио- нальное", 1.1, "399"], ["Искра", 1.1, "399"], ["Исфана", 1.1, "399"], ["Кайрагач", 1.1, "399"], ["Кара-Булак", 1.1, "399"], ["Кара-Даван", 1.1, "399"], ["Кара-Суу", 1.1, "399"], ["Кара-Суу Кара", 1.1, "399"], ["Кара-Чагат", 1.1, "399"], ["Катран", 1.1, "399"], ["Кашка", 1.1, "399"], ["Кек-Таш", 1.1, "398"], ["Коммунизм", 1.1, "399"], ["Коргон", 1.1, "399"], ["Кош-Булак", 1.1, "399"], ["Кулунду", 1.1, "399"], ["Кызыл-Байрак Даркум", 1.1, "399"], ["Кызыл-Танга", 1.1, "399"], ["Кызыл-Чарба", 1.1, "399"], ["Кыял-Сай", 1.1, "399"], ["Лайли", 1.1, "399"], ["Лейлек", 1.1, "399"], ["Маданият", 1.1, "399"], ["Маданият Айбике", 1.1, "399"], ["Майдан", 1.1, "399"], ["Макаевка Танги-Башы", 1.1, "399"], ["Озгерюш", 1.1, "399"], ["Панчак", 1.1, "399"], ["Патан", 1.1, "399"], ["Первое Мая Даргаз", 1.1, "399"], ["Сайданаузе", 1.1, "399"], ["Самат Шалды- Балды", 1.1, "399"], ["Сары-Добо", 1.1, "399"], ["Селькан", 1.1, "399"], ["Сулюкта", 1.1, "399"], ["Суу-Башы", 1.1, "399"], ["Таш-Булак", 1.1, "399"], ["Тогуз-Булак", 1.1, "399"], ["Центральное", 1.1, "399"], ["Чарбак-Сай Маргун", 1.1, "399"], ["Чуянчы", 1.1, "399"], ["Чымген Большевик", 1.1, "399"], ["Шахмур", 1.1, "399"], ["Шоро", 1.1, "399"], ["Шорчак", 1.1, "399"], ["Эски-Оочу", 1.1, "399"], ["им. Гагарина Тайлан", 1.1, "399"], ["им. Чапаева", 1.1, "399"], ["им. Чкалова Мырза-Патч", 1.1, "399"], ["лет Киргизии", 1.1, "399"], ["лет СССР", 1.1, "399"]], "Ала-Букинский район": [["Арап", 1.15, "399"], ["Беш-Таш", 1.15, "399"], ["Джалгыз-Орюк", 1.15, "399"], ["Куруксай", 1.15, "399"], ["Кёк-Таш", 1.15, "399"], ["Орто-Суу", 1.15, "399"], ["Чолок-Тума", 1.1, "399"], ["Чон-Сай", 1.15, "399"]], "Сузакский район": [["Туура-Джангак", 1.1, "399"], ["Чымчык", 1.05, "399"]], "Тогуз-Тороузский район": [["Арал", 1.2, "399"], ["Атай", 1.45, "399"], ["Бирдик", 1.2, "399"], ["Дедемель", 1.45, "сумма"], ["Им.Карла Маркса Атай", 1.2, "399"], ["Казарман", 1.45, "399"], ["Кара-Суу", 1.2, "399"], ["Кош-Булак", 1.2, "398"], ["Макмал", 1.5, "сумма"], ["Орнек", 1.2, "399"], ["Орто- Канджыга", 1.2, "399"], ["Табылгыты", 1.2, "399"], ["Чалдыбар", 1.2, "399"], ["Чет-Булак", 1.45, "399"], ["Шоро", 1.2, "399"]], "Токтогульский район": [["Ак-Жар", 1.15, "399"], ["Ак-Тектир", 1.15, "399"], ["Алмалуу", 1.15, "399"], ["Арал", 1.15, "399"], ["Балыкты", 1.15, "399"], ["Беке-Чал", 1.15, "399"], ["Бель-Алды", 1.15, "399"], ["Бир-Булак", 1.15, "399"], ["Бирлик", 1.15, "399"], ["Бор-Дебе Кызыл- Туу", 1.15, "399"], ["Бордобо", 1.15, "399"], ["Борлуу-Кыя", 1.15, "399"], ["Бууракан", 1.15, "399"], ["Джаны-Джер", 1.45, "399"], ["Джаны-Джол", 1.15, "399"], ["Джар-Таш", 1.15, "399"], ["Джетиген", 1.15, "398"], ["Кара-Джыгач", 1.15, "399"], ["Кара-Кель", 1.15, "399"], ["Кара-Кюнгей", 1.15, "399"], ["Кара-Суу", 1.15, "399"], ["Кек-Бель", 1.15, "399"], ["Кель", 1.15, "399"], ["Кен-Туулук", 1.15, "399"], ["Кескен-Тебе", 1.15, "399"], ["Кетерме", 1.3, "398"], ["Кетерме (отдалённый труднодоступный)", 1.15, "399"], ["Коджо-Сойду", 1.15, "399"], ["Комсомол Кумбасты", 1.15, "399"], ["Конур-Огюз", 1.15, "399"], ["Коргон", 1.15, "399"], ["Коргон", 1.15, "399"], ["Кош-Тебе", 1.15, "399"], ["Кушчу-Суу", 1.15, "399"], ["Кызыл- Жылдыз", 1.15, "399"], ["Кызыл- Озгорюш", 1.15, "399"], ["Кызыл-Туу", 1.15, "399"], ["Кызыл-Ураан", 1.15, "399"], ["Кызыл-Чарба", 1.15, "399"], ["Кыр-Коо", 1.15, "399"], ["Мазар-Суу", 1.15, "399"], ["Ничке", 1.15, "399"], ["Ничке-Сай", 1.15, "399"], ["Ноот", 1.15, "399"], ["Озгоруш", 1.15, "399"], ["Орнек", 1.15, "399"], ["Саргата", 1.15, "399"], ["Сары-Булак", 1.15, "399"], ["Сары-Камыш", 1.1, "399"], ["Сары-Сегет", 1.15, "399"], ["Совет", 1.15, "399"], ["Сугат", 1.15, "399"], ["Такталык", 1.15, "399"], ["Такталык", 1.15, "399"], ["Таш-Кечуу", 1.15, "399"], ["Терек-Суу", 1.15, "399"], ["Токтогул", 1.15, "399"], ["Толук", 1.15, "399"], ["Торкен", 1.15, "399"], ["Ултан-Камыш", 1.15, "399"], ["Уч-Терек", 1.15, "399"], ["Чаар-Таш", 1.15, "399"], ["Чеч-Дебе Таш- Коро", 1.15, "399"], ["Чолпон-Ата", 1.15, "399"], ["Чон-Арык", 1.15, "399"], ["Чоргочу", 1.15, "399"], ["Шиленкана", 1.15, "399"], ["Эшсай", 1.15, "399"], ["им. Куйбышева Эмгек", 1.15, "399"], ["лесн. Чычкан", 1.15, "399"]], "Чаткальский район": [["Айгыр-Джал", 1.3, "399"], ["Ак-Таш Тегирмен-Таш", 1.3, "399"], ["Башкы-Терек", 1.5, "сумма"], ["Беш-Арал отд.с/х Чаткал", 1.3, "399"], ["Бузук", 1.3, "399"], ["Джаны-Базар с/х Чаткал", 1.3, "399"], ["Каныш-Кыя", 1.3, "399"], ["Коргон-Сай", 1.3, "сумма"], ["Куру-Тегерек", 1.7, "сумма"], ["Курулуш", 1.3, "399"], ["Кызыл-Токой", 1.3, "399"], ["Мандай", 1.3, "399"], ["Сарай-Сай", 1.3, "399"], ["Сумсар", 1.3, "399"], ["Тегермен-Сай", 1.3, "399"], ["Терек-Сай", 1.3, "399"], ["Туюк-Суу", 1.3, "сумма"], ["Чакмак-Суу", 1.6, "сумма"], ["Шекафтар", 1.3, "399"], ["к/ц Таласской области", 1.6, "398"]], "Ак-Сууйский район": [["Ак-Булак", 1.1, "398"], ["Ак-Булун", 1.1, "398"], ["Ак-Суу", 1.1, "398"], ["Ак-Чий", 1.1, "398"], ["Алтын-Арашан", 1.5, "398"], ["База Кок-Кыя", 1.6, "398"], ["Боз-Учук", 1.1, "398"], ["Джол-Колот", 1.1, "398"], ["Жыргалан", 1.6, "сумма"], ["Ичке-Джергез", 1.1, "398"], ["Кайырма-Арык", 1.1, "398"], ["Кек-Джайык", 1.3, "сумма"], ["Кен-Суу", 1.7, "398"], ["Кереге-Таш", 1.1, "398"], ["Койлуу", 1.6, "398"], ["Кургак", 1.8, "398"], ["Курорт Ак-Суу", 1.3, "398"], ["Кызыл-Джар", 1.3, "398"], ["Лесное", 1.1, "398"], ["Май-Саз", 1.6, "398"], ["Ново-Вознесеновка", 1.1, "398"], ["Пионер", 1.1, "398"], ["Сары-Камыш", 1.1, "398"], ["Советское", 1.1, "398"], ["Таш-Кароо", 1.6, "398"], ["Токтогул", 1.1, "398"], ["Тюрген", 1.4, "398"], ["Энильчек", 1.5, "398"], ["Эчкили-Таш", 1.7, "398"]], "Джети-Огузский район": [["Ак-Шыйрак", 1.6, "398"], ["База Оттук", 1.45, "399"], ["Барскоон", 1.1, "398"], ["Джууку", 1.2, "398"], ["Кара-Сай", 1.85, "сумма"], ["Каракол", 1.8, "398"], ["Кургак-Айрык", 1.2, "398"], ["Лесхоз", 1.25, "399"], ["Пикертык", 1.8, "398"], ["Подгорное", 1.2, "399"], ["Светлая Поляна", 1.1, "398"], ["Сеок", 1.8, "398"], ["Сутту-Булак", 1.3, "398"], ["Талды-Булак", 1.3, "398"], ["Уч-Кошкон", 1.8, "398"], ["Чон-Кызыл-Суу", 1.2, "398"], ["Ыштык", 1.8, "398"], ["к/ц Бедель", 1.75, "399"], ["курорт Джети-Огуз", 1.3, "398"], ["курорт Джылы-Суу", 1.4, "398"]], "Иссык-Кульская область": [["г. Каракол", 1.1, "398"]], "Иссык-Кульский район": [["Ак-Шибак", 1.05, "399"], ["Кек-Дебе", 1.1, "398"], ["Лесничество", 1.05, "399"], ["Чет-Байсоорун", 1.1, "398"]], "Тонский район": [["Ак-Сай", 1.1, "398"], ["Ала-Баш", 1.3, "398"], ["Арчалы", 1.6, "398"], ["Боконбаев", 1.1, "398"], ["Ден-Талаа", 1.2, "398"], ["Джер-Уй", 1.3, "398"], ["Каджи-Саз", 1.5, "398"], ["Каджы-Сай", 1.1, "398"], ["Кек-Сай", 1.3, "398"], ["Кель-Тер", 1.2, "398"], ["Кок-Мойнок-1", 1.05, "399"], ["Кок-Мойнок-2", 1.05, "399"], ["Комсомол", 1.3, "398"], ["Конур-Олен", 1.2, "398"], ["Кызыл-Омпол (Кызыл-Тебе)", 1.05, "399"], ["Лесхоз", 1.15, "399"], ["Темир-Канат", 1.3, "398"], ["Тогуз-Булак", 1.2, "398"], ["Торт-Куль", 1.1, "398"], ["Туура-Суу-1", 1.3, "398"], ["Туура-Суу-2", 1.3, "398"], ["Четинди", 1.3, "398"]], "Тюпский район": [["Джылуу-Булак", 1.1, "398"], ["Ичке-Суу", 1.1, "398"], ["Каркыра", 1.3, "398"], ["Кен-Суу", 1.1, "398"], ["Кеочю", 1.1, "398"], ["Корумду", 1.1, "398"], ["Сан-Таш", 1.3, "398"], ["Сары-Телегей", 1.1, "398"], ["Талды-Суу", 1.1, "398"], ["Токтоян", 1.1, "398"], ["Чон-Бет", 1.05, "399"], ["Чон-Таш", 1.1, "398"], ["Шаты", 1.1, "398"]], "Ак-Талинский район": [["Ак-Кыя", 1.2, "399"], ["Ак-Тал", 1.2, "399"], ["Ак-Чий", 1.3, "398"], ["Баетов", 1.5, "сумма"], ["Байгенчек", 1.2, "399"], ["Джаны-Талап", 1.5, "399"], ["Джаны-Тилек", 1.2, "398"], ["Жерге-Тал", 1.5, "сумма"], ["Кадыралы", 1.5, "сумма"], ["Каиынды-Булак", 1.5, "сумма"], ["Кара-Бургон", 1.5, "сумма"], ["Кара-Ой", 1.2, "399"], ["Кек-Джар", 1.2, "399"], ["Конорчок", 1.2, "сумма"], ["Кош-Дебе", 1.5, "сумма"], ["Терек", 1.5, "сумма"], ["Угют", 1.2, "399"], ["Чолок-Кайын", 1.2, "сумма"]], "Ат-Башинский район": [["Ак-Бейит", 1.8, "398"], ["Ак-Джар", 1.5, "сумма"], ["Ак-Моюн", 1.5, "сумма"], ["Ак-Муз", 1.5, "398"], ["Ат-Башы", 1.5, "сумма"], ["Ача-Каинды", 1.5, "сумма"], ["Баш-Кайынды", 1.5, "сумма"], ["Беш-Белчир", 1.6, "398"], ["Бирлик", 1.5, "сумма"], ["Большевик", 1.5, "сумма"], ["Босого", 1.6, "сумма"], ["ДЭУ Ак-Бейит", 1.8, "398"], ["ДЭУ Туз-Бел", 1.5, "398"], ["Джаны-Кюч", 1.5, "сумма"], ["Заготскот", 1.6, "398"], ["Казыбек", 1.5, "сумма"], ["Казыбек (Чон-Колот)", 1.6, "398"], ["Кара-Булун", 1.5, "сумма"], ["Кара-Суу", 1.5, "сумма"], ["Кароол-Добо", 1.95, "сумма"], ["Кель-Суу", 1.8, "398"], ["Кок-Айгыр", 1.95, "сумма"], ["Коргон-Таш (Кандубава)", 1.85, "сумма"], ["Корумду", 1.85, "сумма"], ["Кызыл-Туу", 1.5, "сумма"], ["Озгерюш", 1.5, "398"], ["Орто-Кашка-Суу", 1.8, "398"], ["Первомайское", 1.5, "сумма"], ["Талды-Суу", 1.5, "сумма"], ["Терек-Суу", 1.5, "сумма"], ["Торугарт", 1.95, "сумма"], ["Уселек", 1.95, "сумма"], ["Чатыр-Таш", 1.8, "398"], ["Чоко-Бий", 1.5, "сумма"], ["им. Калинина", 1.5, "сумма"], ["к/ц Ак-Сай", 1.85, "сумма"], ["к/ц Новый", 1.8, "398"], ["к/ц Сураш-Таш", 1.85, "сумма"], ["к/ц Чатыр-Таш", 1.8, "398"]], "Джумгальский район": [["Ак-Татыр", 1.2, "399"], ["Ак-Улак", 1.5, "сумма"], ["Ак-Чий", 1.1, "398"], ["Арал", 1.2, "399"], ["Базар-Турук", 1.5, "сумма"], ["Байзак", 1.2, "сумма"], ["Баш-Кууганды", 1.2, "сумма"], ["Беш-Терек", 1.2, "399"], ["Джаны-Арык", 1.5, "сумма"], ["Джумгал", 1.5, "сумма"], ["Кара-Кече", 1.7, "398"], ["Кек-Ой", 1.2, "399"], ["Кен-Суу", 1.5, "399"], ["Кичи-Арал", 1.2, "399"], ["Кол-Арык", 1.1, "398"], ["Котур-Суу", 1.2, "399"], ["Куйручук", 1.2, "398"], ["Кызарт", 1.5, "сумма"], ["Кызыл- Жылдыз", 1.2, "399"], ["Кызыл-Коргон", 1.2, "399"], ["Кызыл-Сеок", 1.5, "сумма"], ["Кызыл-Эмгек", 1.3, "398"], ["Лама", 1.5, "сумма"], ["Мин-Куш", 1.5, "сумма"], ["Мин-Теке", 1.2, "398"], ["Сары-Булун", 1.2, "399"], ["Табылгы", 1.2, "399"], ["Табылгыты", 1.2, "399"], ["Таш-Добо", 1.5, "сумма"], ["Тугол-Сай", 1.2, "398"], ["Чаек", 1.2, "399"], ["Чон-Добо", 1.5, "сумма"], ["Эпкин", 1.2, "398"]], "Кочкорский район": [["Ак-Джар", 1.2, "сумма"], ["Ак-Кыя", 1.5, "398"], ["Ак-Талаа", 1.5, "сумма"], ["Ак-Чий", 1.5, "сумма"], ["Ара-Кель", 1.5, "сумма"], ["Баялы Исакеев", 1.2, "398"], ["Бугучу", 1.2, "398"], ["Ден-Алыш", 1.5, "сумма"], ["Джаны-Джол", 1.1, "398"], ["Кара-Кюнгей", 1.5, "сумма"], ["Кара-Мойнок", 1.5, "сумма"], ["Кара-Саз", 1.2, "398"], ["Кара-Суу", 1.2, "сумма"], ["Кара-Тоо", 1.1, "398"], ["Кок-Джар", 1.2, "сумма"], ["Комсомол", 1.5, "сумма"], ["Кочкор", 1.2, "сумма"], ["Кум-Добо", 1.2, "398"], ["Кызыл-Дебе", 1.5, "сумма"], ["Мантыш", 1.5, "сумма"], ["Оро-Башы", 1.5, "сумма"], ["Орток", 1.5, "сумма"], ["Осовиахим", 1.2, "398"], ["Сары-Булак", 1.5, "сумма"], ["Тармал-Саз", 1.1, "398"], ["Телек", 1.2, "сумма"], ["Тендик", 1.2, "сумма"], ["Туз", 1.5, "сумма"], ["Узун-Булак", 1.4, "398"], ["Чекилдек", 1.2, "сумма"], ["Чолпон", 1.2, "398"], ["Шамшы", 1.5, "сумма"], ["Эпкин", 1.5, "сумма"]], "Нарынская область": [["г. Нарын", 1.5, "сумма"]], "Нарынский район": [["Ак-Булун", 1.5, "сумма"], ["Ак-Кудук", 1.5, "сумма"], ["Ак-Кыя", 1.5, "сумма"], ["Ак-Талаа", 1.2, "сумма"], ["Алыш", 1.5, "сумма"], ["Восьмое-Марта", 1.5, "сумма"], ["Джалгыз-Терек", 1.2, "398"], ["Джан-Булак", 1.2, "398"], ["Джер-Кечкю", 1.7, "398"], ["Доболу", 1.5, "сумма"], ["Достук", 1.2, "сумма"], ["Жерге-Тал", 1.5, "сумма"], ["Жылан-Арык", 1.2, "399"], ["Ийри-Суу", 1.5, "сумма"], ["Казан-Куйган", 1.5, "сумма"], ["Кайынды", 1.5, "398"], ["Кара-Ункюр", 1.5, "398"], ["Кенеш", 1.5, "сумма"], ["Куйбышев", 1.5, "сумма"], ["Куланак", 1.2, "сумма"], ["Кызыл-Джылдыз", 1.5, "сумма"], ["Лакол", 1.6, "398"], ["Мин-Булак", 1.5, "сумма"], ["Орнок", 1.4, "398"], ["Орто-Нура", 1.5, "сумма"], ["Орто-Саз", 1.5, "сумма"], ["Орюк-Там (часть)", 1.5, "398"], ["Оттук", 1.5, "сумма"], ["Тамды-Суу", 1.5, "398"], ["Таш-Башат", 1.5, "сумма"], ["Тегерек", 1.5, "сумма"], ["Тош-Булак", 1.4, "398"], ["Туура-Суу", 1.8, "398"], ["Учкун", 1.2, "сумма"], ["Чет-Нура", 1.5, "сумма"], ["Шоро", 1.3, "сумма"], ["Эки-Нарын", 1.5, "сумма"], ["Эмгек-Талаа", 1.2, "сумма"], ["Эмгекчил", 1.5, "398"], ["Эчки-Башы", 1.5, "сумма"]], "Алайский район": [["Ак-Босого", 1.7, "398"], ["Ак-Джай", 1.5, "398"], ["Ак-Талаа (Кен-Джылга)", 1.5, "398"], ["Ак-Талаа (Мурдаш)", 1.5, "398"], ["Алмалы", 1.45, "сумма"], ["Алтын-Мазар", 1.6, "398"], ["Арал", 1.2, "398"], ["Арзыкулов", 1.45, "сумма"], ["Арпа-Тектир", 1.15, "399"], ["Арча-Булак", 1.8, "398"], ["Аскалы", 1.45, "сумма"], ["Аюу-Тапан", 1.25, "сумма"], ["Бай-Булак", 1.15, "399"], ["Боз", 1.45, "сумма"], ["Бор-Добо (Кызыл-Дон)", 1.85, "сумма"], ["Бортумшук", 1.7, "398"], ["Геджиге", 1.5, "398"], ["Гульчо", 1.15, "399"], ["Джаны-Турмуш", 1.15, "сумма"], ["Джар-Кыштак", 1.15, "399"], ["Джергетал", 1.45, "сумма"], ["Жол-Жылга", 1.15, "сумма"], ["Икизяк", 1.8, "сумма"], ["Иркештам", 1.7, "398"], ["Кабылан-Кол", 1.15, "399"], ["Кайнама", 1.45, "сумма"], ["Кара-Булак", 1.15, "399"], ["Кара-Киндик", 1.8, "398"], ["Кара-Суу", 1.45, "сумма"], ["Кара-Таш", 1.45, "399"], ["Кара-Шоро", 1.15, "399"], ["Кара-Шыбак (Кара-Шама)", 1.5, "398"], ["Карагансай (Оруклю)", 1.2, "398"], ["Кек-Суу", 1.8, "398"], ["Кел-Чаты", 1.55, "сумма"], ["Кен-Джылга", 1.15, "сумма"], ["Кен-Джылга (отдалённый труднодоступный)", 1.2, "399"], ["Кичи-Бюлелю", 1.45, "сумма"], ["Кичи-Каракол", 1.45, "сумма"], ["Кок-Булак", 1.8, "398"], ["Кок-Добо", 1.8, "398"], ["Колдук", 1.45, "сумма"], ["Коммунизм", 1.15, "сумма"], ["Кошулуш", 1.45, "сумма"], ["Кум-Шоро", 1.45, "сумма"], ["Кун-Элек", 1.45, "сумма"], ["Кунгей", 1.15, "399"], ["Кургак", 1.8, "398"], ["Кыз-Эмчек", 1.15, "399"], ["Кыз-Эмчек Карагаша", 1.15, "399"], ["Кызыл-Алай", 1.6, "398"], ["Кызыл-Булак", 1.2, "398"], ["Кызыл-Колот (Джусалы)", 1.3, "398"], ["Кызыл-Кыштоо", 1.45, "сумма"], ["Кызыл-Ой", 1.15, "399"], ["Кызыл-Ой", 1.15, "399"], ["Ленин-Джол", 1.15, "399"], ["Миязды", 1.15, "сумма"], ["Мукур", 1.15, "сумма"], ["Мурдаш", 1.45, "сумма"], ["Нура", 1.7, "398"], ["Оксой", 1.45, "сумма"], ["Октябрь", 1.45, "сумма"], ["Оро-Дебе Будалык-Чат", 1.15, "399"], ["Орто-Суу", 1.25, "сумма"], ["Осоавиахим", 1.15, "сумма"], ["Первое Мая", 1.15, "399"], ["Сары-Могол", 1.8, "398"], ["Сары-Таш", 1.8, "398"], ["Согонду", 1.45, "399"], ["Соку-Таш Шамшалы", 1.15, "399"], ["Сопу-Коргон", 1.45, "сумма"], ["Талды-Булак", 1.45, "сумма"], ["Талды-Суу", 1.8, "398"], ["Тамгатерек", 1.45, "399"], ["Тамды-Терек", 1.15, "399"], ["Таргалак", 1.45, "сумма"], ["Таш-Башат", 1.15, "399"], ["Таш-Короо", 1.25, "сумма"], ["Тельман-Чаты", 1.15, "399"], ["Терек", 1.45, "сумма"], ["Тогуз-Булак", 1.15, "399"], ["Тойкуло", 1.45, "сумма"], ["Чакмак Кырк- Кель", 1.15, "399"], ["Чекюле", 1.45, "сумма"], ["Чий-Талаа", 1.45, "сумма"], ["Чон-Бюлелю", 1.45, "сумма"], ["Чон-Каракол", 1.6, "398"], ["Шалба", 1.25, "сумма"], ["Шоро-Булак Олджоке", 1.15, "399"], ["им. Гагарина", 1.5, "сумма"], ["с/х Алай", 1.45, "сумма"]], "Араванский район": [["Кичик-Алай", 1.4, "398"], ["Кюнделюк", 1.1, "398"], ["Майдан-Тал", 1.4, "398"], ["Мин-Теке", 1.5, "398"], ["Сары-Булак", 1.3, "сумма"], ["Чогом", 1.6, "сумма"]], "Кара-Кульджинский район": [["Айдын-Кель", 1.45, "399"], ["Ак-Богуз", 1.45, "399"], ["Алтын-Кюрек", 1.15, "сумма"], ["Ара-Булак", 1.5, "398"], ["Беш-Кемпир", 1.2, "398"], ["Бору-Токой", 1.4, "398"], ["Будур", 1.15, "399"], ["Буйга", 1.2, "398"], ["Буура-Чаты", 1.45, "399"], ["Дарга", 1.45, "399"], ["Джаман-Тал", 1.45, "399"], ["Джаыклу Коргон", 1.45, "399"], ["Джетим-Дебе", 1.15, "399"], ["Джол-Джурга Ой- Мыя", 1.45, "399"], ["Джон-Булак", 1.45, "399"], ["Желе-Добо", 1.5, "398"], ["Кайын-Талаа", 1.45, "сумма"], ["Кан-Коргон", 1.45, "сумма"], ["Кара-Богуз", 1.15, "399"], ["Кара-Булак", 1.3, "398"], ["Кара-Джыгач", 1.2, "сумма"], ["Кара-Саз", 1.45, "399"], ["Кара-Таш", 1.45, "399"], ["Кара-Таш", 1.15, "399"], ["Кашка-Суу", 1.45, "399"], ["Кашка-Суу", 1.55, "399"], ["Кек-Арт", 1.5, "398"], ["Кичи-Талдысуу", 1.1, "398"], ["Кичине-Джон Джон-2", 1.15, "399"], ["Кичине-Ой-Тал", 1.15, "399"], ["Кол-Таш", 1.45, "399"], ["Кондук", 1.45, "сумма"], ["Конокбай-Талаа", 1.3, "398"], ["Коо-Чаты", 1.5, "398"], ["Куйо-Таш", 1.15, "399"], ["Куйоо-Таш", 1.4, "398"], ["Кызыл-Булак", 1.45, "сумма"], ["Кызыл-Джар", 1.45, "сумма"], ["Ой-Тал", 1.45, "сумма"], ["Ордеш", 1.15, "399"], ["Орто-Ой-Тал Джон-1", 1.15, "399"], ["Рават", 1.2, "399"], ["Сайталаа", 1.3, "398"], ["Сары-Булак", 1.25, "сумма"], ["Сары-Бээ", 1.1, "399"], ["Сары-Кюнгей", 1.3, "399"], ["Таш-Кыя", 1.45, "399"], ["Тегерек-Саз", 1.45, "сумма"], ["Терек", 1.45, "сумма"], ["Терек-Суу", 1.1, "399"], ["Тогуз-Булак", 1.5, "сумма"], ["Токбай-Талаа", 1.2, "399"], ["Тушунук", 1.15, "399"], ["Узун-Шоро", 1.45, "399"], ["Чон-Джон", 1.15, "399"], ["Чычырканак", 1.45, "сумма"], ["Шаркыратма", 1.2, "398"], ["Шырдай", 1.15, "399"], ["им. Калинина", 1.45, "399"], ["им. Сидорова", 1.45, "399"]], "Кара-Сууйский район": [["Алга-Бас", 1.2, "398"], ["Алпордо", 1.2, "399"], ["Бек-Джар", 1.1, "398"], ["Карагур", 1.4, "398"], ["Кичик", 1.3, "398"], ["Коджо-Келен", 1.4, "398"], ["Куранкол", 1.1, "398"], ["Лаглан", 1.2, "399"], ["Лангар", 1.1, "399"], ["Сай", 1.2, "398"], ["Талдык", 1.4, "398"], ["Талдык (Катта-Талдык)", 1.2, "398"], ["Тээке", 1.2, "398"], ["Чыйырчык", 1.4, "сумма"]], "Ноокатский район": [["Буудайлык", 1.3, "398"], ["Буудайлык 2", 1.15, "399"], ["Гезарт", 1.1, "398"], ["Жазы-Токой", 1.1, "399"], ["Кайынды", 1.3, "398"], ["Калдай", 1.4, "398"], ["Кара-Булак", 1.1, "399"], ["Кашка-Суу", 1.6, "398"], ["Кичик-Алай", 1.6, "398"], ["Кок-Бель", 1.1, "399"], ["Кок-Чукур", 1.4, "398"], ["Кызыл-Талаа", 1.4, "сумма"], ["Кызыл-Чара", 1.5, "398"], ["Лесхоз", 1.35, "399"], ["Ой-Тал", 1.4, "398"], ["Сары-Могол", 1.7, "398"], ["Турпа-Чаты", 1.4, "398"], ["Чаты", 1.4, "398"], ["Чон-Кыштоо", 1.1, "398"], ["Шамшаалы", 1.1, "398"], ["Эр-Булак", 1.4, "398"], ["Эчкиатар", 1.1, "398"]], "Узгенский район": [["Ак-Терек", 1.1, "398"], ["Ийрек", 1.1, "398"], ["Кара-Баткак", 1.1, "399"], ["Коргон", 1.1, "399"], ["Орказган", 1.1, "398"], ["Семиз-Кель", 1.1, "399"], ["Топор", 1.3, "398"], ["Туз-Бель", 1.2, "398"], ["Ункюр", 1.1, "398"], ["Учкаптал", 1.3, "398"], ["Ынтымак", 1.1, "398"], ["Эльчибек", 1.1, "399"], ["им. Карла Маркса", 1.1, "398"]], "Чон-Алайский район": [["Ачык-Суу", 1.8, "398"], ["Бурган-Суу", 1.7, "398"], ["Дароот-Коргон", 1.5, "398"], ["Жайылма", 1.7, "398"], ["Жаман-Жар", 1.5, "398"], ["Жар-Башы", 1.5, "398"], ["Жаш-Тилек", 1.5, "398"], ["Жекенди", 1.5, "398"], ["Жекенди (Батманкол)", 1.5, "398"], ["Жекенди (Чолок)", 1.5, "398"], ["Кабык", 1.6, "398"], ["Кара-Кабак", 1.7, "398"], ["Кара-Тейит", 1.5, "сумма"], ["Кара-Шыбак", 1.5, "398"], ["Карамык", 1.5, "сумма"], ["Кашка-Суу", 1.7, "398"], ["Кочкорчу", 1.5, "398"], ["Кулчу", 1.5, "сумма"], ["Кызыл-Туу", 1.5, "398"], ["Кызыл-Эшме", 1.5, "398"], ["Мукур", 1.5, "сумма"], ["Сары-Булак", 1.5, "398"], ["Чак", 1.5, "398"], ["Чулук", 1.5, "398"], ["Шибээ", 1.5, "398"], ["Ынтымак", 1.7, "398"]], "Таласский район": [["Ак-Коргон", 1.2, "398"], ["Кара-Ой", 1.1, "399"], ["Кепюре-Базар", 1.2, "398"], ["Талды-Булак", 1.3, "398"], ["Участок Жеруй (до 2725 м)", 1.6, "398"]], "Аламудунский район": [["Альплагерь", 1.1, "398"], ["Чункурчак", 1.2, "398"]], "Жайылский район": [["Кайсар", 1.3, "398"], ["Каракол", 1.3, "398"], ["Кожомкул", 1.3, "398"], ["Кызыл-Ой", 1.25, "399"], ["Первое Мая", 1.3, "398"], ["Суусамыр", 1.3, "398"], ["Тунук", 1.3, "398"]], "Кеминский район": [["Ак-Тюз", 1.3, "398"], ["Борду (Кашка)", 1.3, "398"], ["Участок Восточного лесхоза", 1.1, "398"]], "Панфиловский район": [["Отмок", 1.6, "398"]], "Ыссык-Атинский район": [["Курорт Ысык-Ата", 1.1, "398"]]};
+const RP=100, VYCH_LICH=650, VYCH_IJD=100, ST_PN=.10, MZP=3280, PRED_NPF=.08;
+const $=id=>document.getElementById(id);
+
+const CAT_NAMES={
+ "001":["Основной работник","Негизги жумушчу","Regular employee"],
+ "003":["Работник-пенсионер","Пенсионер жумушчу","Working pensioner"],
+ "009":["Инвалид III группы по слуху","Угуусу боюнча III топтогу майып","Hearing disability, group III"],
+ "010":["Иностранный гражданин или лицо без гражданства","Чет өлкөлүк жаран же жарандыгы жок адам","Foreign national or stateless person"],
+ "011":["Работник без права на вычеты","Чегерүү укугу жок жумушчу","Employee without deductions"],
+ "100":["Инвалид I или II группы","I же II топтогу майып","Disability, group I or II"],
+ "101":["Участник или инвалид Великой Отечественной войны","Улуу Ата Мекендик согуштун катышуучусу же майыбы","WWII veteran or disabled veteran"],
+ "102":["Лицо, приравненное к участникам ВОВ","УАМС катышуучуларына теңештирилген адам","Person equated to WWII veterans"],
+ "103":["Индивидуальный предприниматель","Жеке ишкер","Sole proprietor"],
+ "104":["Арендодатель","Ижарага берүүчү","Landlord"],
+ "105":["Гонорар, вознаграждение по договору","Гонорар, келишим боюнча сыйакы","Fee or contract remuneration"],
+ "106":["Младший обслуживающий персонал","Кенже тейлөө персоналы","Junior support staff"],
+ "107":["Пенсионер — младший обслуживающий персонал","Пенсионер — кенже тейлөө персоналы","Pensioner in junior support staff"],
+ "001-64/69":["Основной работник, мужчина до 1964 / женщина до 1969 г. р.","Негизги жумушчу, 1964-жылга чейинки эркек / 1969-жылга чейинки аял","Regular employee born before 1964 (men) or 1969 (women)"],
+ "010-64/69":["Иностранный гражданин, мужчина до 1964 / женщина до 1969 г. р.","Чет өлкөлүк жаран, 1964-жылга чейинки эркек / 1969-жылга чейинки аял","Foreign national born before 1964 (men) or 1969 (women)"],
+ "011-64/69":["Без права на вычеты, мужчина до 1964 / женщина до 1969 г. р.","Чегерүү укугу жок, 1964-жылга чейинки эркек / 1969-жылга чейинки аял","No deductions, born before 1964 (men) or 1969 (women)"],
+ "101-64/69":["Участник ВОВ, мужчина до 1964 / женщина до 1969 г. р.","УАМС катышуучусу, 1964-жылга чейинки эркек / 1969-жылга чейинки аял","WWII veteran born before 1964 (men) or 1969 (women)"],
+ "106-64/69":["Младший обслуживающий персонал, мужчина до 1964 / женщина до 1969 г. р.","Кенже тейлөө персоналы, 1964-жылга чейинки эркек / 1969-жылга чейинки аял","Junior support staff born before 1964 (men) or 1969 (women)"],
+ "СОВМ-64/69":["Совместитель, мужчина до 1964 / женщина до 1969 г. р.","Кошумча иштөөчү, 1964-жылга чейинки эркек / 1969-жылга чейинки аял","Second job, born before 1964 (men) or 1969 (women)"],
+ "СОВМ":["Совместитель","Кошумча иштөөчү","Part-time second job"]
+};
+const REG_NAMES=[
+ ["Общий режим (статья 2)","Жалпы режим (2-берене)","General regime (article 2)"],
+ ["Субъект предпринимательства, НКО, ТСЖ, партия, профсоюз (статья 2-2)","Ишкердик субъекти, КЭУ, ТКШ, партия, кесиптик бирлик (2-2-берене)","Small business, NGO, HOA, party, trade union (article 2-2)"],
+ ["Швейная и текстильная промышленность (статья 2-1)","Тигүү жана текстиль өнөр жайы (2-1-берене)","Garment and textile industry (article 2-1)"],
+ ["Сельскохозяйственный кооператив (статья 5-1)","Айыл чарба кооперативи (5-1-берене)","Agricultural cooperative (article 5-1)"],
+ ["Крестьянское хозяйство — юридическое лицо","Дыйкан чарбасы — юридикалык жак","Farm as a legal entity"],
+ ["Бюджетная организация, государственное предприятие","Бюджеттик уюм, мамлекеттик ишкана","Budget-funded or state organisation"],
+ ["Дипломатическая служба и загранучреждения","Дипломатиялык кызмат жана чет өлкөдөгү мекемелер","Diplomatic service and foreign missions"]
+];
+const FORM_NAMES={
+ oklad:["Месячный оклад","Айлык оклад","Monthly salary"],
+ chas:["Часовая тарифная ставка","Сааттык тарифтик ставка","Hourly rate"],
+ den:["Дневная тарифная ставка","Күндүк тарифтик ставка","Daily rate"],
+ sdel:["Сдельная оплата","Кесимдик төлөм","Piece rate"],
+ summa:["Готовая сумма начисления","Даяр чегерүү суммасы","Ready earnings amount"]
+};
+const OKLAD_LAB={
+ oklad:["Оклад, сом в месяц","Айлык оклад, сом","Monthly salary, KGS"],
+ chas:["Часовая ставка, сом","Сааттык ставка, сом","Hourly rate, KGS"],
+ den:["Дневная ставка, сом","Күндүк ставка, сом","Daily rate, KGS"],
+ sdel:["Оклад не используется","Оклад колдонулбайт","Salary not used"],
+ summa:["Сумма начисления за отработанное время, сом","Иштелген убакыт үчүн чегерүү суммасы, сом","Earnings for time worked, KGS"]
+};
+
+const T={
+ru:{brand:"бухгалтерия и расчёт заработной платы · Кыргызская Республика",
+ h1:'Эсеп <em>Жумушчу</em> — зарплата работника<br>по нормам 2026 года',
+ lead:"Продавец, водитель, швея, охранник, бухгалтер. Считает начисление, взносы в Социальный фонд и подоходный налог — с минимальной базой по среднемесячной зарплате вашего района и разбором каждой строки.",
+ fact1:"районов и городов со своей СМЗ", fact2:"категорий работников", fact3:"сёл с районным коэффициентом",
+ fact4b:"ст. 200", fact4:"расчёт налога по части 5 НК КР",
+ h_data:"Данные", h_data_note:"заполняется вами",
+ l_region:"Район или город работы", l_cat:"Категория работника", l_regime:"Режим работодателя", l_forma:"Форма оплаты труда",
+ l_normaDn:"Норма дней", l_faktDn:"Отработано дней", l_normaCh:"Норма часов", l_faktCh:"Отработано часов",
+ l_sdelKol:"Объём выработки", l_sdelCena:"Расценка за единицу", l_ijd:"Иждивенцев, человек",
+ s_dop:"Доплаты по Трудовому кодексу",
+ l_sv1:"Сверхурочные, первые 2 часа", l_sv2:"Сверхурочные, далее", l_noch:"Ночные часы, 22:00–06:00",
+ l_prazd:"Часы в выходные и праздники", l_sovm:"Совмещение, %", l_vred:"Вредные условия, %",
+ l_stazhp:"Надбавка за стаж, %", l_premia:"Премия, сом",
+ s_high:"Высокогорье, удержания, аванс", l_rayon:"Район работы", l_village:"Населённый пункт",
+ h_rayon:"33 района из постановлений Кабинета Министров № 398 и № 399. Если организация не в высокогорной и не в отдалённой зоне — оставьте «Не применяется».",
+ l_vgs:"Стаж работы в высокогорье, лет",
+ h_vgs:"Надбавка: до 5 лет — нет, далее 5 · 10 · 15 · 20 · 25 · 30 процентов от оплаты за отработанное время.",
+ l_alim:"Алименты, % после налогов", l_prochie:"Прочие удержания, сом", l_avans:"Выплачен аванс, сом", l_npf:"Взнос в НПФ, сом",
+ m_fwd:"Обычный расчёт", m_back:"От обратного",
+ l_netTarget:"Сумма на руки, сом", h_netTarget:"Впишите сумму, которую работник должен получить, — начисление подберётся само с учётом категории, доплат и района.",
+ rBack:"Начислить", rBackWhy:"подобрано так, чтобы на руки вышла заданная сумма",
+ tab_pay:"Зарплата", tab_otp:"Отпускные", tab_bol:"Больничный", tab_dek:"Декретные",
+ m1:"1-й месяц", m2:"2-й месяц", m3:"3-й месяц",
+ c_nach:"начислено, сом", c_kal:"кал. дней", c_prz:"празд.", c_rab:"раб. дней",
+ otp_h:"Отпускные", otp_sub:"средний заработок за 3 месяца, коэффициент 29,6",
+ otp_period:"Расчётный период — 3 месяца перед отпуском",
+ otp_hint:"По каждому месяцу: начислено, календарных дней в месяце и сколько из них праздничных.",
+ otp_dni:"Календарных дней отпуска", otp_prz:"Праздничных дней внутри отпуска",
+ bol_h:"Больничный", bol_sub:"пособие по временной нетрудоспособности",
+ bol_period:"Расчётный период — 3 месяца перед болезнью",
+ bol_hint:"По каждому месяцу: начислено и фактически отработанные рабочие дни.",
+ bol_stazh:"Общий трудовой стаж, лет", bol_dni:"Рабочих дней нетрудоспособности",
+ dek_h:"Декретные", dek_sub:"пособие по беременности и родам",
+ dek_period:"Расчётный период — 3 месяца перед отпуском",
+ dek_case:"Случай", dek_rab:"Рабочих дней в отпуске", dek_dop:"Доплата до среднего от работодателя",
+ yes:"Да", no:"Нет",
+ rSdz:"Среднедневной заработок", rDney:"Расчётное количество дней", rDniOpl:"Дней к оплате",
+ rOtpNach:"Начислено отпускных", rVzn10:"Страховые взносы (10%)", rVych:"Стандартные вычеты",
+ rBaza:"Налоговая база", rProc:"Процент по стажу", rDnevn:"Дневное пособие",
+ rRabDni:"Отработано рабочих дней", rZarab:"Заработок за 3 месяца",
+ rChastRab:"За счёт работодателя", rChastBud:"За счёт бюджета", rStavkaBud:"Дневная ставка бюджета",
+ rDopl:"Доплата работодателя", rPosob:"Всего пособие", rDniKal:"Календарных дней отпуска",
+ otpNote:"Отпускные — оплата труда: облагаются подоходным налогом и страховыми взносами. Нерабочие праздничные дни в число дней отпуска не включаются (статья 68 Трудового кодекса).",
+ bolNote:"Первые 10 рабочих дней оплачивает работодатель по проценту от стажа, с 11-го — республиканский бюджет фиксированной суммой 10 000 сом в месяц. Пособие подоходным налогом и взносами не облагается.",
+ dekNote:"Первые 10 рабочих дней — 100% среднего заработка от работодателя, далее пособие из бюджета 2 000 сом в месяц. Продолжительность: 126 дней обычные роды, 140 при осложнённых и двойне, до 180 в высокогорье.",
+ tabs_note:"Открыт один расчёт — остальные вкладки приглушены. Нажмите нужную, чтобы перейти.",
+ l_net:"К выдаче на руки", notApply:"Не применяется",
+ smzFull:"СМЗ полная", smzVzn:"для взносов", coefOf:"коэффициент",
+ rkNone:"районный коэффициент не применяется", rkRes:"постановление №", rkSum:"сумма по постановлениям № 398 и № 399",
+ gEarn:"Начислено", gHold:"Удержано с работника",
+ rTarif:"Оплата за отработанное время", rSv:"Сверхурочные", rNoch:"Ночные часы", rPrazd:"Выходные и праздничные",
+ rSovm:"Совмещение", rVred:"Вредные условия", rStazh:"Надбавка за стаж", rVg:"Высокогорный стаж",
+ rRk:"Районный коэффициент", rMzp:"Доплата до минимальной зарплаты", rTotal:"Всего начислено",
+ rPf:"Пенсионный фонд", rGnpf:"Накопительный фонд", rPolis:"Страховой полис", rNoVzn:"Страховые взносы",
+ rNoVznWhy:"по этой категории организация взносы не удерживает",
+ rPn:"Подоходный налог", rNeobl:"Не облагается подоходным налогом", rAlim:"Алименты", rProch:"Прочие удержания",
+ rAvans:"Выплачен аванс", rHoldTotal:"Всего удержано",
+ wDays:"дн", wHours:"ч", wOf:"из", wBase:"база после вычетов", wFromSmz:"от СМЗ",
+ wNeoblWhy:"надбавка за высокогорный стаж и прирост от районного коэффициента — статья 191 часть 4 пункт 1 НК КР",
+ wVgWhy:"от оплаты за отработанное время", wPayment:"выплата", wSmzUsech:"усечённая СМЗ", wMzp:"МЗП",
+ wNoPn:"не удерживается: выплата индивидуальному предпринимателю",
+ noteDop:"<b>Доначисление налога — {dop} сом.</b> Налоговая база {base} ниже СМЗ {smz}, поэтому в бюджет уходит {gns} сом: {pn} удержано с работника и {dop} организация платит из своих средств (статья 200 часть 5 НК КР).",
+ noteIp:"<b>Подоходный налог не удерживается.</b> С дохода индивидуального предпринимателя налоговый агент налог не уплачивает — статья 201 часть 1 пункт 3 НК КР. Взносы ИП платит сам: не менее 6% от СМЗ района (статья 6 Закона № 8).",
+ emp:"<b>Расходы организации сверх зарплаты:</b> взносы {vzn}{dopfot}{pndop}. Полная стоимость работника — {cost} сом.",
+ empDopfot:" (база с дополнительным ФОТ {b})", empPndop:" и доначисление налога {p}",
+ e_method:"Методика", h_method:"Почему сумма налога больше, чем 10% от вашей зарплаты",
+ p_method:"Если налоговая база после вычетов оказалась меньше среднемесячной зарплаты по району, база принимается равной этой СМЗ. Но с работника удерживается налог только с его фактической базы — разницу доплачивает организация из своих средств.",
+ steps:[["Шаг 1","Начисление","Оклад делится на норму дней и умножается на отработанные, дальше прибавляются сверхурочные, ночные, праздничные и премии. Если вышло меньше 3 280 сом за полный месяц — добавляется доплата до минимальной зарплаты."],
+        ["Шаг 2","Взносы работника","10% с фактической зарплаты: 8% в Пенсионный фонд и 2% в накопительный. У пенсионеров накопительная часть не удерживается, у инвалидов I–II групп ставка 2%."],
+        ["Шаг 3","Налоговая база","Из начисления вычитаются взносы, персональный вычет 650 сом и по 100 сом на каждого иждивенца. Полученная база сравнивается со среднемесячной зарплатой района."],
+        ["Высокогорье","Район и стаж","Выбираете район и село — коэффициент от 1,05 до 1,80 подставляется из справочника на 767 населённых пунктов. Надбавка за стаж растёт до 30 процентов. Эти суммы взносами облагаются, а подоходным налогом — нет."],
+        ["Шаг 4","Налог и доначисление","С работника — 10% от его базы. Если база ниже СМЗ, организация доплачивает 10% от разницы за свой счёт. В бюджет уходит сумма этих двух частей."]],
+ law:[["Статья 200 часть 5 НК КР","База ниже СМЗ — принимается СМЗ; с работника налог от фактической базы, с организации — от разницы"],
+      ["Статья 194 НК КР","Вычеты: 6,5 расчётного показателя на работника, 1 — на иждивенца, отчисления по соцстрахованию, взносы в НПФ не более 8% базы"],
+      ["Статья 201 часть 1 НК КР","С выплат индивидуальному предпринимателю и лицу на патенте налог не удерживается"],
+      ["Статья 191 часть 4 пункт 1 НК КР","Надбавка за стаж в высокогорье и прирост от районного коэффициента подоходным налогом не облагаются"],
+      ["Закон № 8, статьи 2, 2-1, 2-2, 5-1, 6","Тарифы взносов: работодатель 17,25% или 2,25%, работник 10%, швейная отрасль — от 40% СМЗ, ИП — от 6% СМЗ"],
+      ["ПКМ КР № 398 и № 399 от 05.06.2026","Районные коэффициенты — справочник на 767 населённых пунктов"],
+      ["Трудовой кодекс № 23 от 23.01.2025","Сверхурочные ×1,5 и ×2, ночные ×1,5, выходные и праздничные ×2, норма 40 часов в неделю"],
+      ["Инструкция ПКМ № 729 от 03.12.2024","Классификатор категорий работников и минимальная база взносов работодателя — 60% или 100% СМЗ"]],
+ h_serv:"Считаем зарплату за вас",
+ p_serv:"Ведём расчёт заработной платы, отчётность в Социальный фонд и налоговую, восстанавливаем учёт. Работаем с организациями и индивидуальными предпринимателями по всему Кыргызстану.",
+ b_wa:"Написать в WhatsApp", b_edu:"Калькулятор для работников образования",
+ foot1:"© 2026 <b>AN Consulting</b> · Асель Мамарасулова. Методика расчёта и справочники — авторская работа. Расчёт носит справочный характер: окончательные суммы зависят от условий трудового договора и учётной политики организации.",
+ foot2:"Среднемесячная заработная плата по районам — данные Государственной налоговой службы на 2026 год. Нормы приведены по редакциям на сентябрь 2026 года."},
+
+kg:{brand:"бухгалтердик эсеп жана эмгек акы эсептөө · Кыргыз Республикасы",
+ h1:'Эсеп <em>Жумушчу</em> — 2026-жылдын ченемдери<br>боюнча жумушчунун эмгек акысы',
+ lead:"Сатуучу, айдоочу, тигүүчү, күзөтчү, бухгалтер. Чегерүүнү, Социалдык фондго төгүмдөрдү жана киреше салыгын эсептейт — районуңуздун орточо айлык эмгек акысы боюнча минималдуу база менен жана ар бир саптын чечмелениши менен.",
+ fact1:"өз ОАЭАсы бар район жана шаар", fact2:"жумушчу категориясы", fact3:"райондук коэффициенти бар айыл",
+ fact4b:"200-берене", fact4:"КР СКнын 5-бөлүгү боюнча салык эсеби",
+ h_data:"Маалыматтар", h_data_note:"сиз толтурасыз",
+ l_region:"Иштеген району же шаары", l_cat:"Жумушчунун категориясы", l_regime:"Иш берүүчүнүн режими", l_forma:"Эмгек акы төлөө формасы",
+ l_normaDn:"Күн ченеми", l_faktDn:"Иштелген күн", l_normaCh:"Саат ченеми", l_faktCh:"Иштелген саат",
+ l_sdelKol:"Өндүрүлгөн көлөм", l_sdelCena:"Бир бирдиктин баасы", l_ijd:"Багуудагы адам, киши",
+ s_dop:"Эмгек кодекси боюнча кошумча төлөмдөр",
+ l_sv1:"Ашыкча иш, алгачкы 2 саат", l_sv2:"Ашыкча иш, андан ары", l_noch:"Түнкү сааттар, 22:00–06:00",
+ l_prazd:"Дем алыш жана майрам сааттары", l_sovm:"Кызмат айкалыштыруу, %", l_vred:"Зыяндуу шарттар, %",
+ l_stazhp:"Иш стажы үчүн үстөк, %", l_premia:"Сыйлык, сом",
+ s_high:"Бийик тоо, кармоолор, аванс", l_rayon:"Иштеген району", l_village:"Калктуу конуш",
+ h_rayon:"Министрлер Кабинетинин № 398 жана № 399 токтомдорундагы 33 район. Уюм бийик тоолуу же алыскы аймакта болбосо — «Колдонулбайт» деп калтырыңыз.",
+ l_vgs:"Бийик тоодогу иш стажы, жыл",
+ h_vgs:"Үстөк: 5 жылга чейин — жок, андан ары иштелген убакыт үчүн төлөмдүн 5 · 10 · 15 · 20 · 25 · 30 пайызы.",
+ l_alim:"Алимент, салыктан кийин %", l_prochie:"Башка кармоолор, сом", l_avans:"Берилген аванс, сом", l_npf:"Мамлекеттик эмес пенсиялык фондго төгүм, сом",
+ m_fwd:"Кадимки эсеп", m_back:"Тескерисинче",
+ l_netTarget:"Колго берилүүчү сумма, сом", h_netTarget:"Жумушчу алышы керек болгон сумманы жазыңыз — чегерүү категорияны, кошумчаларды жана районду эске алып өзү тандалат.",
+ rBack:"Чегерүү керек", rBackWhy:"колго белгиленген сумма чыгышы үчүн тандалды",
+ tab_pay:"Эмгек акы", tab_otp:"Өргүү акысы", tab_bol:"Оорулуу баракча", tab_dek:"Декрет",
+ m1:"1-ай", m2:"2-ай", m3:"3-ай",
+ c_nach:"чегерилди, сом", c_kal:"календ. күн", c_prz:"майрам", c_rab:"иш күнү",
+ otp_h:"Өргүү акысы", otp_sub:"3 айдын орточо эмгек акысы, коэффициент 29,6",
+ otp_period:"Эсептөө мезгили — өргүүгө чейинки 3 ай",
+ otp_hint:"Ар бир ай боюнча: чегерилген сумма, айдагы календардык күндөр жана алардын канчасы майрам.",
+ otp_dni:"Өргүүнүн календардык күндөрү", otp_prz:"Өргүү ичиндеги майрам күндөрү",
+ bol_h:"Оорулуу баракча", bol_sub:"убактылуу эмгекке жарамсыздык боюнча жөлөкпул",
+ bol_period:"Эсептөө мезгили — оорудан мурунку 3 ай",
+ bol_hint:"Ар бир ай боюнча: чегерилген сумма жана иш жүзүндө иштелген иш күндөрү.",
+ bol_stazh:"Жалпы эмгек стажы, жыл", bol_dni:"Эмгекке жарамсыздыктын иш күндөрү",
+ dek_h:"Декрет", dek_sub:"кош бойлуулук жана төрөт боюнча жөлөкпул",
+ dek_period:"Эсептөө мезгили — өргүүгө чейинки 3 ай",
+ dek_case:"Учур", dek_rab:"Өргүүдөгү иш күндөрү", dek_dop:"Иш берүүчүдөн орточого чейин кошумча",
+ yes:"Ооба", no:"Жок",
+ rSdz:"Орточо күндүк эмгек акы", rDney:"Эсептик күндөрдүн саны", rDniOpl:"Төлөнүүчү күндөр",
+ rOtpNach:"Өргүү акысы чегерилди", rVzn10:"Камсыздандыруу төгүмдөрү (10%)", rVych:"Стандарттык чегерүүлөр",
+ rBaza:"Салык базасы", rProc:"Стаж боюнча пайыз", rDnevn:"Күндүк жөлөкпул",
+ rRabDni:"Иштелген иш күндөрү", rZarab:"3 айдагы эмгек акы",
+ rChastRab:"Иш берүүчүнүн эсебинен", rChastBud:"Бюджеттин эсебинен", rStavkaBud:"Бюджеттин күндүк ставкасы",
+ rDopl:"Иш берүүчүнүн кошумчасы", rPosob:"Бардыгы жөлөкпул", rDniKal:"Өргүүнүн календардык күндөрү",
+ otpNote:"Өргүү акысы — эмгек акы: киреше салыгы жана камсыздандыруу төгүмдөрү салынат. Майрам күндөрү өргүү күндөрүнө кирбейт (Эмгек кодексинин 68-беренеси).",
+ bolNote:"Алгачкы 10 иш күнүн иш берүүчү стаж боюнча пайыз менен төлөйт, 11-күндөн тартып — республикалык бюджет айына 10 000 сом туруктуу сумма менен. Жөлөкпулга киреше салыгы жана төгүм салынбайт.",
+ dekNote:"Алгачкы 10 иш күнү — иш берүүчүдөн орточо эмгек акынын 100 пайызы, андан ары бюджеттен айына 2 000 сом. Узактыгы: кадимки төрөттө 126 күн, татаалдашканда жана эгиз төрөттө 140, бийик тоодо 180 күнгө чейин.",
+ tabs_note:"Бир эсеп ачык — калган өтмөктөр басаңдатылган. Керектүүсүн басыңыз.",
+ l_net:"Колго берилет", notApply:"Колдонулбайт",
+ smzFull:"толук ОАЭА", smzVzn:"төгүмдөр үчүн", coefOf:"коэффициент",
+ rkNone:"райондук коэффициент колдонулбайт", rkRes:"токтом №", rkSum:"№ 398 жана № 399 токтомдору боюнча сумма",
+ gEarn:"Чегерилди", gHold:"Жумушчудан кармалды",
+ rTarif:"Иштелген убакыт үчүн төлөм", rSv:"Ашыкча иш", rNoch:"Түнкү сааттар", rPrazd:"Дем алыш жана майрам",
+ rSovm:"Кызмат айкалыштыруу", rVred:"Зыяндуу шарттар", rStazh:"Стаж үчүн үстөк", rVg:"Бийик тоо стажы",
+ rRk:"Райондук коэффициент", rMzp:"Минималдуу эмгек акыга чейин кошумча", rTotal:"Бардыгы чегерилди",
+ rPf:"Пенсиялык фонд", rGnpf:"Топтолмо фонд", rPolis:"Камсыздандыруу полиси", rNoVzn:"Камсыздандыруу төгүмдөрү",
+ rNoVznWhy:"бул категория боюнча уюм төгүм кармабайт",
+ rPn:"Киреше салыгы", rNeobl:"Киреше салыгы салынбайт", rAlim:"Алимент", rProch:"Башка кармоолор",
+ rAvans:"Берилген аванс", rHoldTotal:"Бардыгы кармалды",
+ wDays:"күн", wHours:"саат", wOf:"ичинен", wBase:"чегерүүлөрдөн кийинки база", wFromSmz:"ОАЭАдан",
+ wNeoblWhy:"бийик тоо стажы үчүн үстөк жана райондук коэффициенттин өсүшү — КР СК 191-беренесинин 4-бөлүгүнүн 1-пункту",
+ wVgWhy:"иштелген убакыт үчүн төлөмдөн", wPayment:"төлөм", wSmzUsech:"кыскартылган ОАЭА", wMzp:"МЭА",
+ wNoPn:"кармалбайт: жеке ишкерге төлөм",
+ noteDop:"<b>Салыкты кошумча чегерүү — {dop} сом.</b> Салык базасы {base} ОАЭАдан ({smz}) төмөн, ошондуктан бюджетке {gns} сом барат: {pn} жумушчудан кармалды, {dop} уюм өз каражатынан төлөйт (КР СК 200-беренесинин 5-бөлүгү).",
+ noteIp:"<b>Киреше салыгы кармалбайт.</b> Жеке ишкердин кирешесинен салык агенти салык төлөбөйт — КР СК 201-беренесинин 1-бөлүгүнүн 3-пункту. Төгүмдөрдү жеке ишкер өзү төлөйт: райондун ОАЭАсынын 6 пайызынан кем эмес (№ 8 Мыйзамдын 6-беренеси).",
+ emp:"<b>Уюмдун эмгек акыдан тышкары чыгымдары:</b> төгүмдөр {vzn}{dopfot}{pndop}. Жумушчунун толук наркы — {cost} сом.",
+ empDopfot:" (кошумча ЭАФ менен база {b})", empPndop:" жана салыкты кошумча чегерүү {p}",
+ e_method:"Методика", h_method:"Эмне үчүн салык эмгек акынын 10 пайызынан көп чыгат",
+ p_method:"Эгерде чегерүүлөрдөн кийинки салык базасы райондун орточо айлык эмгек акысынан аз болсо, база ошол ОАЭАга барабар деп кабыл алынат. Бирок жумушчудан анын иш жүзүндөгү базасынан гана салык кармалат — айырманы уюм өз каражатынан төлөйт.",
+ steps:[["1-кадам","Чегерүү","Оклад күн ченемине бөлүнүп, иштелген күнгө көбөйтүлөт, андан кийин ашыкча иш, түнкү, майрам сааттары жана сыйлык кошулат. Толук ай үчүн 3 280 сомдон аз чыкса — минималдуу эмгек акыга чейин кошумча кошулат."],
+        ["2-кадам","Жумушчунун төгүмдөрү","Иш жүзүндөгү эмгек акынын 10 пайызы: 8 пайыз Пенсиялык фондго, 2 пайыз топтолмо фондго. Пенсионерлерден топтолмо бөлүк кармалбайт, I–II топтогу майыптар үчүн ставка 2 пайыз."],
+        ["3-кадам","Салык базасы","Чегерүүдөн төгүмдөр, 650 сом жеке чегерүү жана ар бир багуудагы адам үчүн 100 сом алынып салынат. Алынган база райондун ОАЭАсы менен салыштырылат."],
+        ["Бийик тоо","Район жана стаж","Районду жана айылды тандайсыз — 767 калктуу конуштун маалымдамасынан 1,05төн 1,80го чейинки коэффициент коюлат. Стаж үчүн үстөк 30 пайызга чейин өсөт. Бул суммаларга төгүм салынат, киреше салыгы салынбайт."],
+        ["4-кадам","Салык жана кошумча чегерүү","Жумушчудан — анын базасынын 10 пайызы. База ОАЭАдан төмөн болсо, уюм айырманын 10 пайызын өз эсебинен төлөйт. Бюджетке ушул эки бөлүктүн суммасы барат."]],
+ law:[["КР СК 200-берене, 5-бөлүк","База ОАЭАдан төмөн болсо — ОАЭА кабыл алынат; жумушчудан иш жүзүндөгү базадан, уюмдан айырмадан салык"],
+      ["КР СК 194-берене","Чегерүүлөр: жумушчуга 6,5 эсептик көрсөткүч, багуудагы адамга 1, социалдык камсыздандыруу төгүмдөрү, МЭПФго төгүмдөр базанын 8 пайызынан ашпайт"],
+      ["КР СК 201-берене, 1-бөлүк","Жеке ишкерге жана патенттеги адамга төлөнгөн кирешеден салык кармалбайт"],
+      ["КР СК 191-берене, 4-бөлүк, 1-пункт","Бийик тоо стажы үчүн үстөккө жана райондук коэффициенттин өсүшүнө киреше салыгы салынбайт"],
+      ["№ 8 Мыйзам, 2, 2-1, 2-2, 5-1, 6-беренелер","Төгүм тарифтери: иш берүүчү 17,25% же 2,25%, жумушчу 10%, тигүү тармагы — ОАЭАнын 40 пайызынан, жеке ишкер — ОАЭАнын 6 пайызынан"],
+      ["КР МК № 398 жана № 399 токтомдору","Райондук коэффициенттер — 767 калктуу конуштун маалымдамасы"],
+      ["Эмгек кодекси № 23, 23.01.2025","Ашыкча иш ×1,5 жана ×2, түнкү ×1,5, дем алыш жана майрам ×2, жумасына 40 саат ченеми"],
+      ["КР МК № 729 Нускамасы, 03.12.2024","Жумушчу категорияларынын классификатору жана иш берүүчүнүн төгүмдөрүнүн минималдуу базасы — ОАЭАнын 60 же 100 пайызы"]],
+ h_serv:"Эмгек акыны сиз үчүн эсептейбиз",
+ p_serv:"Эмгек акы эсебин, Социалдык фондго жана салык кызматына отчёттуулукту жүргүзөбүз, эсепти калыбына келтиребиз. Кыргызстандын бардык аймагындагы уюмдар жана жеке ишкерлер менен иштейбиз.",
+ b_wa:"WhatsApp аркылуу жазуу", b_edu:"Билим берүү кызматкерлери үчүн калькулятор",
+ foot1:"© 2026 <b>AN Consulting</b> · Асель Мамарасулова. Эсептөө методикасы жана маалымдамалар — автордук иш. Эсеп маалымдама мүнөзүндө: акыркы суммалар эмгек келишиминин шарттарына жана уюмдун эсеп саясатына көз каранды.",
+ foot2:"Райондор боюнча орточо айлык эмгек акы — Мамлекеттик салык кызматынын 2026-жылга маалыматтары. Ченемдер 2026-жылдын сентябрындагы редакциялар боюнча берилди."},
+
+en:{brand:"payroll and accounting services · Kyrgyz Republic",
+ h1:'Esep <em>Jumushchu</em> — employee payroll<br>under the 2026 rules',
+ lead:"Shop assistant, driver, seamstress, guard, accountant. Calculates gross pay, Social Fund contributions and income tax — with the minimum base tied to the average monthly wage of your district, and every line explained.",
+ fact1:"districts and cities with their own average wage", fact2:"employee categories", fact3:"villages with a regional coefficient",
+ fact4b:"art. 200", fact4:"tax calculated under part 5 of the Tax Code",
+ h_data:"Details", h_data_note:"you fill this in",
+ l_region:"District or city of work", l_cat:"Employee category", l_regime:"Employer regime", l_forma:"Pay type",
+ l_normaDn:"Standard days", l_faktDn:"Days worked", l_normaCh:"Standard hours", l_faktCh:"Hours worked",
+ l_sdelKol:"Output quantity", l_sdelCena:"Rate per unit", l_ijd:"Dependants",
+ s_dop:"Supplements under the Labour Code",
+ l_sv1:"Overtime, first 2 hours", l_sv2:"Overtime, further hours", l_noch:"Night hours, 22:00–06:00",
+ l_prazd:"Weekend and holiday hours", l_sovm:"Combining duties, %", l_vred:"Hazardous conditions, %",
+ l_stazhp:"Seniority bonus, %", l_premia:"Bonus, KGS",
+ s_high:"Highlands, deductions, advance", l_rayon:"District", l_village:"Village or town",
+ h_rayon:"33 districts from Cabinet resolutions № 398 and № 399. If the organisation is not in a highland or remote area, leave “Not applicable”.",
+ l_vgs:"Years worked in the highlands",
+ h_vgs:"Bonus: none under 5 years, then 5 · 10 · 15 · 20 · 25 · 30 percent of pay for time worked.",
+ l_alim:"Alimony, % after taxes", l_prochie:"Other deductions, KGS", l_avans:"Advance paid, KGS", l_npf:"Private pension contribution, KGS",
+ m_fwd:"Direct calculation", m_back:"Reverse",
+ l_netTarget:"Net pay target, KGS", h_netTarget:"Enter what the employee must receive — the gross amount is solved for, taking the category, supplements and district into account.",
+ rBack:"Gross to accrue", rBackWhy:"solved so that net pay matches the target",
+ tab_pay:"Payroll", tab_otp:"Leave pay", tab_bol:"Sick leave", tab_dek:"Maternity",
+ m1:"month 1", m2:"month 2", m3:"month 3",
+ c_nach:"earnings, KGS", c_kal:"cal. days", c_prz:"holidays", c_rab:"work days",
+ otp_h:"Leave pay", otp_sub:"three-month average, factor 29.6",
+ otp_period:"Reference period — 3 months before the leave",
+ otp_hint:"For each month: earnings, calendar days in the month and how many of them were public holidays.",
+ otp_dni:"Calendar days of leave", otp_prz:"Public holidays within the leave",
+ bol_h:"Sick leave", bol_sub:"temporary disability benefit",
+ bol_period:"Reference period — 3 months before the illness",
+ bol_hint:"For each month: earnings and the working days actually worked.",
+ bol_stazh:"Total years of service", bol_dni:"Working days of sick leave",
+ dek_h:"Maternity", dek_sub:"pregnancy and childbirth benefit",
+ dek_period:"Reference period — 3 months before the leave",
+ dek_case:"Case", dek_rab:"Working days within the leave", dek_dop:"Employer tops up to the average",
+ yes:"Yes", no:"No",
+ rSdz:"Average daily pay", rDney:"Calculated days", rDniOpl:"Days to pay",
+ rOtpNach:"Leave pay accrued", rVzn10:"Social contributions (10%)", rVych:"Standard deductions",
+ rBaza:"Tax base", rProc:"Rate by length of service", rDnevn:"Daily benefit",
+ rRabDni:"Working days worked", rZarab:"Earnings over 3 months",
+ rChastRab:"Paid by the employer", rChastBud:"Paid by the budget", rStavkaBud:"Daily budget rate",
+ rDopl:"Employer top-up", rPosob:"Total benefit", rDniKal:"Calendar days of leave",
+ otpNote:"Leave pay is wages: income tax and social contributions apply. Public holidays are not counted as leave days (article 68 of the Labour Code).",
+ bolNote:"The employer pays the first 10 working days at the rate set by length of service; from day 11 the republican budget pays a fixed 10,000 KGS per month. The benefit carries no income tax or contributions.",
+ dekNote:"The first 10 working days are paid by the employer at 100% of average pay, then the budget pays 2,000 KGS per month. Duration: 126 days for a normal birth, 140 for complications or twins, up to 180 in the highlands.",
+ tabs_note:"One calculator is open — the other tabs are dimmed. Click one to switch.",
+ l_net:"Net pay", notApply:"Not applicable",
+ smzFull:"average wage, full", smzVzn:"for contributions", coefOf:"coefficient",
+ rkNone:"no regional coefficient applies", rkRes:"resolution №", rkSum:"sum under resolutions № 398 and № 399",
+ gEarn:"Earnings", gHold:"Withheld from employee",
+ rTarif:"Pay for time worked", rSv:"Overtime", rNoch:"Night hours", rPrazd:"Weekends and holidays",
+ rSovm:"Combining duties", rVred:"Hazardous conditions", rStazh:"Seniority bonus", rVg:"Highland seniority",
+ rRk:"Regional coefficient", rMzp:"Top-up to the minimum wage", rTotal:"Total earnings",
+ rPf:"Pension Fund", rGnpf:"State savings pension fund", rPolis:"Insurance policy", rNoVzn:"Social contributions",
+ rNoVznWhy:"for this category the company withholds no contributions",
+ rPn:"Income tax", rNeobl:"Not subject to income tax", rAlim:"Alimony", rProch:"Other deductions",
+ rAvans:"Advance paid", rHoldTotal:"Total withheld",
+ wDays:"d", wHours:"h", wOf:"of", wBase:"base after deductions", wFromSmz:"of the average wage",
+ wNeoblWhy:"highland seniority bonus and the uplift from the regional coefficient — article 191 part 4 item 1 of the Tax Code",
+ wVgWhy:"of pay for time worked", wPayment:"payment", wSmzUsech:"truncated average wage", wMzp:"minimum wage",
+ wNoPn:"not withheld: payment to a sole proprietor",
+ noteDop:"<b>Additional tax — {dop} KGS.</b> The tax base of {base} is below the average wage of {smz}, so {gns} KGS goes to the budget: {pn} withheld from the employee and {dop} paid by the company from its own funds (article 200 part 5 of the Tax Code).",
+ noteIp:"<b>No income tax is withheld.</b> A tax agent does not pay tax on income paid to a sole proprietor — article 201 part 1 item 3 of the Tax Code. The proprietor pays contributions personally: at least 6% of the district average wage (article 6 of Law № 8).",
+ emp:"<b>Company costs on top of pay:</b> contributions {vzn}{dopfot}{pndop}. Full cost of the employee — {cost} KGS.",
+ empDopfot:" (base including the additional payroll amount {b})", empPndop:" and additional tax {p}",
+ e_method:"Method", h_method:"Why the tax exceeds 10% of your pay",
+ p_method:"If the tax base after deductions falls below the district average wage, the base is taken as that average wage. The employee is still taxed only on their actual base — the company pays the difference from its own funds.",
+ steps:[["Step 1","Gross pay","Salary is divided by the standard days and multiplied by the days worked, then overtime, night, holiday hours and bonuses are added. If a full month yields less than 3,280 KGS, a top-up to the minimum wage follows."],
+        ["Step 2","Employee contributions","10% of actual pay: 8% to the Pension Fund and 2% to the savings fund. Pensioners pay no savings part; disability groups I–II pay 2%."],
+        ["Step 3","Tax base","Contributions, the personal deduction of 650 KGS and 100 KGS per dependant are subtracted. The result is compared with the district average wage."],
+        ["Highlands","District and seniority","Pick the district and village — a coefficient from 1.05 to 1.80 comes from a directory of 767 settlements. The seniority bonus rises to 30 percent. These amounts carry contributions but no income tax."],
+        ["Step 4","Tax and top-up","The employee pays 10% of their base. If the base is below the average wage, the company adds 10% of the difference. The budget receives both parts."]],
+ law:[["Tax Code, article 200 part 5","Base below the average wage — the average wage applies; the employee is taxed on the actual base, the company on the difference"],
+      ["Tax Code, article 194","Deductions: 6.5 calculation indicators per employee, 1 per dependant, social contributions, private pension contributions up to 8% of the base"],
+      ["Tax Code, article 201 part 1","No tax is withheld from payments to a sole proprietor or a person on a patent"],
+      ["Tax Code, article 191 part 4 item 1","Highland seniority bonus and the regional coefficient uplift are exempt from income tax"],
+      ["Law № 8, articles 2, 2-1, 2-2, 5-1, 6","Contribution rates: employer 17.25% or 2.25%, employee 10%, garment industry on 40% of the average wage, sole proprietors on 6%"],
+      ["Cabinet resolutions № 398 and № 399","Regional coefficients — a directory of 767 settlements"],
+      ["Labour Code № 23 of 23.01.2025","Overtime ×1.5 and ×2, night ×1.5, weekends and holidays ×2, a 40-hour week"],
+      ["Instruction, resolution № 729 of 03.12.2024","Employee category classifier and the minimum employer contribution base — 60% or 100% of the average wage"]],
+ h_serv:"We can run your payroll",
+ p_serv:"We handle payroll, Social Fund and tax reporting, and restore neglected books. We work with companies and sole proprietors across Kyrgyzstan.",
+ b_wa:"Message on WhatsApp", b_edu:"Calculator for education staff",
+ foot1:"© 2026 <b>AN Consulting</b> · Asel Mamarasulova. The calculation method and directories are original work. Figures are indicative: final amounts depend on the employment contract and the company's accounting policy.",
+ foot2:"District average wages are State Tax Service data for 2026. Legal provisions are quoted as in force in September 2026."}
+};
+
+let L="ru";
+try{ const saved=localStorage.getItem("esep-lang"); if(saved&&T[saved]) L=saved; }catch(e){}
+const LI={ru:0,kg:1,en:2};
+const loc=()=>L==="en"?"en-US":"ru-RU";
+const f=n=>(Math.round(n*100)/100).toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2});
+const pct=v=>(Math.round(v*10000)/100).toLocaleString(loc())+"%";
+const val=id=>{const v=parseFloat(($(id).value+"").replace(",",".")); return isFinite(v)?v:0;};
+const dec=n=>String(n).replace(".", L==="en"?".":",");
+
+const regionSel=$("region"), catSel=$("cat"), regSel=$("regime"), formaSel=$("forma"),
+      rayonSel=$("rayon"), villageSel=$("village");
+SMZ.forEach((r,i)=>regionSel.add(new Option(r[0],i)));
+regionSel.value=String(Math.max(0,SMZ.findIndex(r=>r[0]==="г.Ош")));
+
+function fillSelects(){
+  const keepCat=catSel.value||"0", keepReg=regSel.value||"0", keepForma=formaSel.value||"oklad";
+  catSel.innerHTML=""; CATS.forEach((c,i)=>catSel.add(new Option(c[0]+" — "+CAT_NAMES[c[0]][LI[L]],i)));
+  catSel.value=keepCat;
+  regSel.innerHTML=""; REGIMES.forEach((r,i)=>regSel.add(new Option(REG_NAMES[i][LI[L]],i)));
+  regSel.value=keepReg;
+  formaSel.innerHTML=""; Object.keys(FORM_NAMES).forEach(k=>formaSel.add(new Option(FORM_NAMES[k][LI[L]],k)));
+  formaSel.value=keepForma;
+}
+
+const vgPct=y=>y<5?0:y<10?.05:y<15?.10:y<20?.15:y<25?.20:y<30?.25:.30;
+function fillRayons(){
+  const keep=rayonSel.value;
+  rayonSel.innerHTML="";
+  rayonSel.add(new Option(T[L].notApply,"—"));
+  Object.keys(REGIONS).sort((a,b)=>a.localeCompare(b,"ru")).forEach(r=>rayonSel.add(new Option(r,r)));
+  if(keep) rayonSel.value=keep;
+}
+function fillVillages(){
+  const r=rayonSel.value, keep=villageSel.value;
+  villageSel.innerHTML="";
+  if(r==="—"){ villageSel.add(new Option(T[L].notApply,"—")); villageSel.disabled=true; return; }
+  villageSel.disabled=false;
+  REGIONS[r].forEach((v,i)=>villageSel.add(new Option(v[0]+" — "+dec(v[1]),i)));
+  if(keep&&keep!=="—"&&REGIONS[r][+keep]) villageSel.value=keep;
+}
+function currentRk(){
+  const r=rayonSel.value;
+  if(r==="—"||villageSel.value==="—") return {k:1,name:"",src:""};
+  const v=REGIONS[r][+villageSel.value];
+  return v?{k:v[1],name:v[0],src:v[2]}:{k:1,name:"",src:""};
+}
+
+function renderStatic(){
+  const t=T[L];
+  document.querySelectorAll("[data-i18n]").forEach(el=>{ const v=t[el.dataset.i18n]; if(v!==undefined) el.innerHTML=v; });
+  $("steps").innerHTML=t.steps.map(s=>'<div class="step"><div class="n">'+s[0]+'</div><h3>'+s[1]+'</h3><p>'+s[2]+'</p></div>').join("");
+  $("law").innerHTML=t.law.map(r=>'<div><b>'+r[0]+'</b><span>'+r[1]+'</span></div>').join("");
+  document.querySelectorAll(".lang").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===L)));
+  document.documentElement.lang = L==="kg"?"ky":L;
+}
+
+function toggleFields(){
+  const fo=formaSel.value;
+  $("oklad").disabled=(fo==="sdel"||MODE==="back");
+  $("normaCh").disabled=(fo!=="oklad");
+  $("faktCh").disabled=!(fo==="chas"||fo==="sdel");
+  $("sdelKol").disabled=$("sdelCena").disabled=(fo!=="sdel");
+  $("okladLab").textContent=OKLAD_LAB[fo][LI[L]];
+}
+
+let MODE="fwd";
+function calc(okladArg, silent){
+  const t=T[L];
+  if(!silent) toggleFields();
+  const reg=REGIMES[+regSel.value], cat=CATS[+catSel.value], smzRow=SMZ[+regionSel.value];
+  const smzFull=smzRow[1], smzUsech=smzRow[2];
+  const [,,stPf,stGnpf,low,minVznF,minPnF,vzRabF,pnF,vychF,polisSmz,polisPay]=cat;
+  const [,tarif,tarifLow,porog,dolyaSmz,minPnReg,pnOtSmz]=reg;
+
+  const fo=formaSel.value, oklad=(okladArg===undefined?val("oklad"):okladArg), normaDn=Math.max(1,val("normaDn")), faktDn=val("faktDn"),
+        normaCh=Math.max(1,val("normaCh")), faktCh=val("faktCh");
+  let tarifChast=0, chas=0;
+  if(fo==="oklad"){ tarifChast=oklad/normaDn*faktDn; chas=oklad/normaCh; }
+  else if(fo==="chas"){ tarifChast=oklad*faktCh; chas=oklad; }
+  else if(fo==="den"){ tarifChast=oklad*faktDn; chas=oklad/8; }
+  else if(fo==="sdel"){ tarifChast=val("sdelKol")*val("sdelCena"); chas=faktCh?tarifChast/faktCh:0; }
+  else { tarifChast=oklad; chas=faktCh?oklad/faktCh:0; }
+
+  const oplSv=chas*(1.5*val("sv1")+2*val("sv2"));
+  const oplNoch=chas*.5*val("noch");
+  const oplPr=chas*val("prazd");
+  const oplSovm=tarifChast*val("sovm")/100;
+  const oplVred=tarifChast*val("vred")/100;
+  const oplStazh=tarifChast*val("stazhp")/100;
+  const RK=currentRk(), rk=Math.max(1,RK.k);
+  const vgP=rk>1?vgPct(val("vgs")):0;
+  const oplVg=tarifChast*vgP;
+  const doRk=tarifChast+oplSv+oplNoch+oplPr+oplSovm+oplVred+oplStazh+oplVg+val("premia");
+  const sRk=doRk*rk;
+  const dopMzp=(faktDn>=normaDn&&sRk<MZP)?MZP-sRk:0;
+  const nach=Math.round((sRk+dopMzp)*100)/100;
+
+  const dolyaMes=Math.min(1,faktDn/normaDn);
+  const smzPropPn=Math.round(smzFull*dolyaMes*100)/100;
+  const smzVzn=smzFull;
+
+  const bazaWork=dolyaSmz>0?smzVzn*dolyaSmz:nach;
+  const pf=Math.round(bazaWork*stPf*100)/100, gnpf=Math.round(bazaWork*stGnpf*100)/100;
+  const polis=Math.round((polisSmz>0?smzUsech*polisSmz:(polisPay>0?nach*polisPay:0))*100)/100;
+  const vznWork=pf+gnpf+polis;
+
+  const minVzn=minVznF&&porog>0;
+  const dopFot=minVzn?Math.max(0,Math.round((porog*smzVzn*dolyaMes-nach)*100)/100):0;
+  const bazaRab=dolyaSmz>0?smzVzn*dolyaSmz:nach+dopFot;
+  const vznRab=vzRabF?Math.round(bazaRab*(low?tarifLow:tarif)*100)/100:0;
+
+  const neobl=Math.round((oplVg+Math.max(0,sRk-doRk))*100)/100;
+  const oblag=Math.max(0,Math.round((nach-neobl)*100)/100);
+  const vznObl=nach>0?Math.round(vznWork*oblag/nach*100)/100:0;
+  const vychStd=vychF===2?VYCH_LICH+VYCH_IJD*val("ijd"):0;
+  const vychNpf=Math.min(val("npf"),Math.round(PRED_NPF*oblag*100)/100);
+  const bazaFact=Math.max(0,oblag-(vychF===0?0:vznObl)-vychStd-vychNpf);
+  const minPn=minPnF&&minPnReg;
+  const bazaItog=(minPn&&bazaFact<smzPropPn)?smzPropPn:bazaFact;
+  const pn=!pnF?0:(pnOtSmz>0?Math.round(smzPropPn*pnOtSmz*100)/100:Math.round(bazaFact*ST_PN*100)/100);
+  const pnDop=(!pnF||pnOtSmz>0)?0:Math.round(Math.max(0,bazaItog-bazaFact)*ST_PN*100)/100;
+  const pnGns=pn+pnDop;
+
+  const alim=Math.round(Math.max(0,nach-vznWork-pn)*val("alim")/100*100)/100;
+  const uder=vznWork+pn+alim+val("prochie");
+  const net=Math.round((nach-uder-val("avans"))*100)/100;
+  const cost=nach+vznRab+pnDop;
+
+  if(silent) return net;
+
+  $("shWho").textContent=cat[0]+" · "+CAT_NAMES[cat[0]][LI[L]];
+  $("shMeta").textContent=smzRow[0]+" · "+t.smzFull+" "+f(smzFull)+" · "+t.smzVzn+" "+f(smzUsech)
+    +(rk>1?" · "+RK.name+", "+t.coefOf+" "+dec(rk):"");
+  $("rkHint").textContent=rk>1
+    ? t.coefOf+" "+dec(rk)+" · "+(RK.src==="сумма"?t.rkSum:t.rkRes+" "+RK.src)
+    : t.rkNone;
+
+  const Lr=[];
+  const add=(ttl,v,why,cls)=>Lr.push('<div class="line '+(cls||"")+'"><span class="t">'+ttl+'</span><span class="v num">'+f(v)+"</span>"+(why?'<span class="why">'+why+"</span>":"")+"</div>");
+  const grp=x=>Lr.push('<div class="group-h">'+x+"</div>");
+
+  if(MODE==="back") add(t.rBack,nach,t.rBackWhy,"tot");
+  grp(t.gEarn);
+  add(t.rTarif,tarifChast, fo==="oklad"?f(oklad)+" ÷ "+normaDn+" "+t.wDays+" × "+faktDn+" "+t.wDays:"");
+  if(oplSv) add(t.rSv,oplSv,f(chas)+" × 1,5 × "+val("sv1")+" "+t.wHours+" + "+f(chas)+" × 2 × "+val("sv2")+" "+t.wHours,"sub");
+  if(oplNoch) add(t.rNoch,oplNoch,f(chas)+" × 50% × "+val("noch")+" "+t.wHours,"sub");
+  if(oplPr) add(t.rPrazd,oplPr,f(chas)+" × 100% × "+val("prazd")+" "+t.wHours,"sub");
+  if(oplSovm) add(t.rSovm,oplSovm,"","sub");
+  if(oplVred) add(t.rVred,oplVred,"","sub");
+  if(oplStazh) add(t.rStazh,oplStazh,"","sub");
+  if(oplVg) add(t.rVg,oplVg,pct(vgP)+" "+t.wVgWhy,"sub");
+  if(rk>1) add(t.rRk,sRk-doRk,RK.name+" · × "+dec(rk)+" · "+(RK.src==="сумма"?t.rkSum:t.rkRes+" "+RK.src),"sub");
+  if(dopMzp) add(t.rMzp,dopMzp,t.wMzp+" "+f(MZP),"sub");
+  add(t.rTotal,nach,"","tot");
+
+  grp(t.gHold);
+  if(pf) add(t.rPf+" "+pct(stPf),pf,f(bazaWork)+" × "+pct(stPf));
+  if(gnpf) add(t.rGnpf+" "+pct(stGnpf),gnpf,f(bazaWork)+" × "+pct(stGnpf));
+  if(!pf&&!gnpf&&!polis) add(t.rNoVzn,0,t.rNoVznWhy);
+  if(polis) add(t.rPolis+" "+pct(polisSmz>0?polisSmz:polisPay),polis,
+    polisSmz>0?t.wSmzUsech+" "+f(smzUsech)+" × "+pct(polisSmz):t.wPayment+" "+f(nach)+" × "+pct(polisPay));
+  add(t.rPn,pn,!pnF?t.wNoPn:(pnOtSmz>0?t.wFromSmz+" "+f(smzPropPn)+" × "+pct(pnOtSmz):f(bazaFact)+" × 10% ("+t.wBase+")"));
+  if(neobl>0) Lr.push('<div class="line"><span class="t" style="color:var(--teal)">'+t.rNeobl+'</span><span class="v num">'+f(neobl)+'</span><span class="why">'+t.wNeoblWhy+"</span></div>");
+  if(alim) add(t.rAlim+" "+val("alim")+"%",alim,"");
+  if(val("prochie")) add(t.rProch,val("prochie"),"");
+  if(val("avans")) add(t.rAvans,val("avans"),"");
+  add(t.rHoldTotal,uder+val("avans"),"","tot");
+
+  $("shLines").innerHTML=Lr.join("");
+  $("shNet").textContent=f(net);
+
+  const note=$("shNote");
+  if(pnDop>0){
+    note.hidden=false;
+    note.innerHTML=t.noteDop.replace("{dop}",f(pnDop)).replace("{base}",f(bazaFact))
+      .replace("{smz}",f(smzPropPn)).replace("{gns}",f(pnGns)).replace("{pn}",f(pn)).replace("{dop}",f(pnDop));
+  } else if(!pnF){ note.hidden=false; note.innerHTML=t.noteIp; }
+  else note.hidden=true;
+
+  $("shEmp").innerHTML=t.emp.replace("{vzn}",f(vznRab))
+    .replace("{dopfot}",dopFot>0?t.empDopfot.replace("{b}",f(bazaRab)):"")
+    .replace("{pndop}",pnDop>0?t.empPndop.replace("{p}",f(pnDop)):"")
+    .replace("{cost}",f(cost));
+  return net;
+}
+
+function solve(target){
+  let lo=0, hi=5e6;
+  for(let i=0;i<70;i++){
+    const mid=(lo+hi)/2;
+    (calc(mid,true) < target) ? lo=mid : hi=mid;
+  }
+  return Math.round((lo+hi)/2*100)/100;
+}
+function run(){
+  if(MODE==="back"){
+    if(formaSel.value==="sdel"){ formaSel.value="summa"; }
+    const x=solve(val("netTarget"));
+    $("oklad").value=x.toFixed(2);
+    calc(x,false);
+  } else calc(undefined,false);
+}
+function setMode(m, skipRun){
+  MODE=m;
+  $("wrapNet").hidden=(m!=="back");
+  document.querySelectorAll(".mode").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.mode===m)));
+  $("oklad").disabled=(m==="back");
+  if(!skipRun) run();
+}
+document.querySelectorAll(".mode").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));
+
+
+// ═══════════ отпускные, больничный, декретные ═══════════
+const DEK_CASES=[
+ [["Обычные роды (70 до + 56 после)","Кадимки төрөт (70 + 56)","Normal birth (70 + 56)"],126],
+ [["Осложнённые роды","Татаалдашкан төрөт","Complicated birth"],140],
+ [["Рождение двух и более детей","Эки жана андан көп бала","Twins or more"],140],
+ [["Высокогорная зона, обычные роды","Бийик тоо, кадимки төрөт","Highlands, normal birth"],140],
+ [["Высокогорная зона, осложнённые роды","Бийик тоо, татаалдашкан төрөт","Highlands, complicated birth"],180]
+];
+const POS_BOL=10000, POS_DEK=2000, RAB_MES=21.2, KOEF_KAL=29.6, DNEY_RAB=10;
+const mv=(p,k,i)=>val(p+"_"+k+i);
+
+function lineHTML(ttl,v,why,cls){
+  return '<div class="line '+(cls||"")+'"><span class="t">'+ttl+'</span><span class="v num">'+f(v)+"</span>"
+    +(why?'<span class="why">'+why+"</span>":"")+"</div>";
+}
+
+function calcOtp(){
+  const t=T[L];
+  let summa=0, dney=0;
+  for(let i=1;i<=3;i++){
+    const nach=mv("otp","nach",i), kal=Math.max(1,mv("otp","kal",i)), prz=mv("otp","prz",i);
+    summa+=nach;
+    const baseDays=Math.max(1,kal-prz);
+    dney+=KOEF_KAL*Math.max(0,kal-prz)/baseDays;
+  }
+  dney=Math.round(dney*100)/100;
+  const sdz=dney?Math.round(summa/dney*100)/100:0;
+  const dniOpl=Math.max(0,val("otp_dni")-val("otp_prz"));
+  const nach=Math.round(sdz*dniOpl*100)/100;
+  const vzn=Math.round(nach*.1*100)/100;
+  const vych=VYCH_LICH+VYCH_IJD*val("otp_ijd");
+  const baza=Math.max(0,nach-vzn-vych);
+  const pn=Math.round(baza*ST_PN*100)/100;
+  const net=Math.round((nach-vzn-pn)*100)/100;
+  $("otpLines").innerHTML=[
+    lineHTML(t.rZarab,summa,""),
+    lineHTML(t.rDney,dney,"29,6 × "+t.c_kal),
+    lineHTML(t.rSdz,sdz,f(summa)+" ÷ "+f(dney)),
+    lineHTML(t.rDniOpl,dniOpl,""),
+    lineHTML(t.rOtpNach,nach,f(sdz)+" × "+dniOpl,"tot"),
+    lineHTML(t.rVzn10,vzn,""),
+    lineHTML(t.rVych,vych,""),
+    lineHTML(t.rBaza,baza,f(nach)+" − "+f(vzn)+" − "+f(vych)),
+    lineHTML(t.rPn,pn,f(baza)+" × 10%")
+  ].join("");
+  $("otpNet").textContent=f(net);
+  $("otpNote").innerHTML=t.otpNote;
+}
+
+function calcBol(){
+  const t=T[L];
+  let summa=0, rab=0;
+  for(let i=1;i<=3;i++){ summa+=mv("bol","nach",i); rab+=mv("bol","kal",i); }
+  const sdz=rab?Math.round(summa/rab*100)/100:0;
+  const st=val("bol_stazh");
+  const proc=st<5?.6:st<8?.8:1;
+  const dnevn=Math.round(sdz*proc*100)/100;
+  const dni=val("bol_dni");
+  const dniR=Math.min(dni,DNEY_RAB), dniB=Math.max(0,dni-DNEY_RAB);
+  const chastR=Math.round(dnevn*dniR*100)/100;
+  const stavkaB=Math.round(POS_BOL/RAB_MES*100)/100;
+  const chastB=Math.round(Math.min(stavkaB,dnevn)*dniB*100)/100;
+  const nach=Math.round((chastR+chastB)*100)/100;
+  $("bolLines").innerHTML=[
+    lineHTML(t.rZarab,summa,""),
+    lineHTML(t.rRabDni,rab,""),
+    lineHTML(t.rSdz,sdz,f(summa)+" ÷ "+f(rab)),
+    lineHTML(t.rProc,proc,pct(proc)+" · "+t.bol_stazh.toLowerCase()+" "+st),
+    lineHTML(t.rDnevn,dnevn,f(sdz)+" × "+pct(proc)),
+    lineHTML(t.rChastRab,chastR,f(dnevn)+" × "+dniR),
+    lineHTML(t.rStavkaBud,stavkaB,f(POS_BOL)+" ÷ "+f(RAB_MES)),
+    lineHTML(t.rChastBud,chastB,dniB?f(Math.min(stavkaB,dnevn))+" × "+dniB:"—"),
+    lineHTML(t.rPosob,nach,"","tot")
+  ].join("");
+  $("bolNet").textContent=f(nach);
+  $("bolNote").innerHTML=t.bolNote;
+}
+
+function fillDekCases(){
+  const sel=$("dek_case"), keep=sel.value||"0";
+  sel.innerHTML="";
+  DEK_CASES.forEach((c,i)=>sel.add(new Option(c[0][LI[L]]+" — "+c[1],i)));
+  sel.value=keep;
+  const dopSel=$("dek_dop"), keepD=dopSel.value||"0";
+  dopSel.innerHTML="";
+  dopSel.add(new Option(T[L].no,"0")); dopSel.add(new Option(T[L].yes,"1"));
+  dopSel.value=keepD;
+}
+
+function calcDek(){
+  const t=T[L];
+  let summa=0, rab=0;
+  for(let i=1;i<=3;i++){ summa+=mv("dek","nach",i); rab+=mv("dek","kal",i); }
+  const sdz=rab?Math.round(summa/rab*100)/100:0;
+  const cs=DEK_CASES[+$("dek_case").value||0];
+  const dniRab=val("dek_rab");
+  const dniR=Math.min(dniRab,DNEY_RAB), dniB=Math.max(0,dniRab-DNEY_RAB);
+  const chastR=Math.round(sdz*dniR*100)/100;
+  const stavkaB=Math.round(POS_DEK/RAB_MES*100)/100;
+  const chastB=Math.round(stavkaB*dniB*100)/100;
+  const dopl=$("dek_dop").value==="1"?Math.round(Math.max(0,(sdz-stavkaB)*dniB)*100)/100:0;
+  const nach=Math.round((chastR+chastB+dopl)*100)/100;
+  $("dekLines").innerHTML=[
+    lineHTML(t.rZarab,summa,""),
+    lineHTML(t.rRabDni,rab,""),
+    lineHTML(t.rSdz,sdz,f(summa)+" ÷ "+f(rab)),
+    lineHTML(t.rDniKal,cs[1],cs[0][LI[L]]),
+    lineHTML(t.rChastRab,chastR,f(sdz)+" × "+dniR),
+    lineHTML(t.rStavkaBud,stavkaB,f(POS_DEK)+" ÷ "+f(RAB_MES)),
+    lineHTML(t.rChastBud,chastB,dniB?f(stavkaB)+" × "+dniB:"—"),
+    lineHTML(t.rDopl,dopl,dopl?f(sdz-stavkaB)+" × "+dniB:"—"),
+    lineHTML(t.rPosob,nach,"","tot")
+  ].join("");
+  $("dekNet").textContent=f(nach);
+  $("dekNote").innerHTML=t.dekNote;
+}
+
+let TAB="pay";
+function setTab(x){
+  TAB=x;
+  const panes={pay:"paneWage",otp:"paneOtp",bol:"paneBol",dek:"paneDek"};
+  Object.keys(panes).forEach(k=>{ $(panes[k]).hidden=(k!==x); });
+  document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===x)));
+  runAll();
+}
+function runAll(){
+  if(TAB==="pay") run();
+  else if(TAB==="otp") calcOtp();
+  else if(TAB==="bol") calcBol();
+  else calcDek();
+}
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>setTab(b.dataset.tab)));
+
+function setLang(x){
+  L=x;
+  try{ localStorage.setItem("esep-lang",x); }catch(e){}
+  renderStatic(); fillSelects(); fillRayons(); fillVillages(); fillDekCases(); runAll();
+}
+document.querySelectorAll(".lang").forEach(b=>b.addEventListener("click",()=>setLang(b.dataset.lang)));
+rayonSel.addEventListener("change",()=>{ fillVillages(); run(); });
+document.querySelectorAll("input,select").forEach(el=>{ el.addEventListener("input",runAll); el.addEventListener("change",runAll); });
+setMode("fwd", true);
+setTab("pay");
+setLang(L);
+
+</script>
+
+</body>
+</html>
