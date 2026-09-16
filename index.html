@@ -98,11 +98,11 @@ a{color:var(--copper)}
 .tabs{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:20px}
 @media (max-width:640px){ .tabs{grid-template-columns:repeat(2,1fr)} }
 .tab{display:flex; flex-direction:column; align-items:center; gap:7px; padding:14px 8px; cursor:pointer;
-  background:transparent; border:1px dashed var(--line-2); border-radius:var(--radius); color:var(--ink-3);
-  font:inherit; font-size:13.5px; font-weight:500; line-height:1.25; text-align:center; opacity:.55;
-  transition:opacity .15s ease, background .15s ease}
-.tab svg{width:30px; height:30px; color:var(--ink-3)}
-.tab:hover{opacity:.9; background:var(--sheet)}
+  background:var(--sheet); border:1px solid var(--line); border-radius:var(--radius); color:var(--ink-2);
+  font:inherit; font-size:13.5px; font-weight:500; line-height:1.25; text-align:center;
+  transition:background .15s ease, border-color .15s ease}
+.tab svg{width:30px; height:30px; color:var(--ink-2)}
+.tab:hover{border-color:var(--copper)}
 .tab[aria-selected="true"]{opacity:1; background:var(--band); border:1px solid var(--band); color:#FFF; font-weight:600;
   box-shadow:var(--shadow, 0 6px 18px -10px rgba(16,24,58,.45))}
 .tab[aria-selected="true"] svg{color:#D8A94A}
@@ -547,7 +547,7 @@ ru:{brand:"бухгалтерия и расчёт заработной плат�
  otpNote:"Отпускные — оплата труда: облагаются подоходным налогом и страховыми взносами. Нерабочие праздничные дни в число дней отпуска не включаются (статья 68 Трудового кодекса).",
  bolNote:"Первые 10 рабочих дней оплачивает работодатель по проценту от стажа, с 11-го — республиканский бюджет фиксированной суммой 10 000 сом в месяц. Пособие подоходным налогом и взносами не облагается.",
  dekNote:"Первые 10 рабочих дней — 100% среднего заработка от работодателя, далее пособие из бюджета 2 000 сом в месяц. Продолжительность: 126 дней обычные роды, 140 при осложнённых и двойне, до 180 в высокогорье.",
- tabs_note:"Открыт один расчёт — остальные вкладки приглушены. Нажмите нужную, чтобы перейти.",
+ tabs_note:"Каждая вкладка считает отдельно: на экране только выбранный расчёт, данные других вкладок в него не попадают.",
  l_net:"К выдаче на руки", notApply:"Не применяется",
  smzFull:"СМЗ полная", smzVzn:"для взносов", coefOf:"коэффициент",
  rkNone:"районный коэффициент не применяется", rkRes:"постановление №", rkSum:"сумма по постановлениям № 398 и № 399",
@@ -633,7 +633,7 @@ kg:{brand:"бухгалтердик эсеп жана эмгек акы эсеп
  otpNote:"Өргүү акысы — эмгек акы: киреше салыгы жана камсыздандыруу төгүмдөрү салынат. Майрам күндөрү өргүү күндөрүнө кирбейт (Эмгек кодексинин 68-беренеси).",
  bolNote:"Алгачкы 10 иш күнүн иш берүүчү стаж боюнча пайыз менен төлөйт, 11-күндөн тартып — республикалык бюджет айына 10 000 сом туруктуу сумма менен. Жөлөкпулга киреше салыгы жана төгүм салынбайт.",
  dekNote:"Алгачкы 10 иш күнү — иш берүүчүдөн орточо эмгек акынын 100 пайызы, андан ары бюджеттен айына 2 000 сом. Узактыгы: кадимки төрөттө 126 күн, татаалдашканда жана эгиз төрөттө 140, бийик тоодо 180 күнгө чейин.",
- tabs_note:"Бир эсеп ачык — калган өтмөктөр басаңдатылган. Керектүүсүн басыңыз.",
+ tabs_note:"Ар бир өтмөк өзүнчө эсептейт: экранда тандалган эсеп гана, башка өтмөктөрдүн маалыматы кошулбайт.",
  l_net:"Колго берилет", notApply:"Колдонулбайт",
  smzFull:"толук ОАЭА", smzVzn:"төгүмдөр үчүн", coefOf:"коэффициент",
  rkNone:"райондук коэффициент колдонулбайт", rkRes:"токтом №", rkSum:"№ 398 жана № 399 токтомдору боюнча сумма",
@@ -719,7 +719,7 @@ en:{brand:"payroll and accounting services · Kyrgyz Republic",
  otpNote:"Leave pay is wages: income tax and social contributions apply. Public holidays are not counted as leave days (article 68 of the Labour Code).",
  bolNote:"The employer pays the first 10 working days at the rate set by length of service; from day 11 the republican budget pays a fixed 10,000 KGS per month. The benefit carries no income tax or contributions.",
  dekNote:"The first 10 working days are paid by the employer at 100% of average pay, then the budget pays 2,000 KGS per month. Duration: 126 days for a normal birth, 140 for complications or twins, up to 180 in the highlands.",
- tabs_note:"One calculator is open — the other tabs are dimmed. Click one to switch.",
+ tabs_note:"Each tab calculates separately: only the selected one is shown, and data from the other tabs never enters it.",
  l_net:"Net pay", notApply:"Not applicable",
  smzFull:"average wage, full", smzVzn:"for contributions", coefOf:"coefficient",
  rkNone:"no regional coefficient applies", rkRes:"resolution №", rkSum:"sum under resolutions № 398 and № 399",
@@ -818,7 +818,7 @@ function renderStatic(){
 }
 
 function toggleFields(){
-  const fo=formaSel.value;
+  const fo=OKLAD_LAB[formaSel.value]?formaSel.value:"oklad";
   $("oklad").disabled=(fo==="sdel"||MODE==="back");
   $("normaCh").disabled=(fo!=="oklad");
   $("faktCh").disabled=!(fo==="chas"||fo==="sdel");
@@ -829,6 +829,7 @@ function toggleFields(){
 let MODE="fwd";
 function calc(okladArg, silent){
   const t=T[L];
+  if(!CATS[+catSel.value]||!REGIMES[+regSel.value]) return 0;
   if(!silent) toggleFields();
   const reg=REGIMES[+regSel.value], cat=CATS[+catSel.value], smzRow=SMZ[+regionSel.value];
   const smzFull=smzRow[1], smzUsech=smzRow[2];
@@ -1091,12 +1092,12 @@ function calcDek(){
 }
 
 let TAB="pay";
-function setTab(x){
+function setTab(x, skipRun){
   TAB=x;
   const panes={pay:"paneWage",otp:"paneOtp",bol:"paneBol",dek:"paneDek"};
   Object.keys(panes).forEach(k=>{ $(panes[k]).hidden=(k!==x); });
   document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===x)));
-  runAll();
+  if(!skipRun) runAll();
 }
 function runAll(){
   if(TAB==="pay") run();
@@ -1115,7 +1116,7 @@ document.querySelectorAll(".lang").forEach(b=>b.addEventListener("click",()=>set
 rayonSel.addEventListener("change",()=>{ fillVillages(); run(); });
 document.querySelectorAll("input,select").forEach(el=>{ el.addEventListener("input",runAll); el.addEventListener("change",runAll); });
 setMode("fwd", true);
-setTab("pay");
+setTab("pay", true);
 setLang(L);
 
 </script>
