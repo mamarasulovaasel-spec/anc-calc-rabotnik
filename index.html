@@ -52,6 +52,7 @@
   --band:#0B1326;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{
   margin:0; background:var(--paper); color:var(--ink);
   font-family:"Golos Text","Segoe UI",system-ui,sans-serif; font-size:16px; line-height:1.6;
@@ -99,10 +100,10 @@ a{color:var(--copper)}
 @media (max-width:640px){ .tabs{grid-template-columns:repeat(2,1fr)} }
 .tab{display:flex; flex-direction:column; align-items:center; gap:7px; padding:14px 8px; cursor:pointer;
   background:var(--sheet); border:1px solid var(--line); border-radius:var(--radius); color:var(--ink-2);
-  font:inherit; font-size:13.5px; font-weight:500; line-height:1.25; text-align:center;
-  transition:background .15s ease, border-color .15s ease}
+  font:inherit; font-size:13.5px; font-weight:500; line-height:1.25; text-align:center; opacity:.82;
+  transition:opacity .15s ease, border-color .15s ease}
 .tab svg{width:30px; height:30px; color:var(--ink-2)}
-.tab:hover{border-color:var(--copper)}
+.tab:hover{opacity:1; border-color:var(--copper)}
 .tab[aria-selected="true"]{opacity:1; background:var(--band); border:1px solid var(--band); color:#FFF; font-weight:600;
   box-shadow:var(--shadow, 0 6px 18px -10px rgba(16,24,58,.45))}
 .tab[aria-selected="true"] svg{color:#D8A94A}
