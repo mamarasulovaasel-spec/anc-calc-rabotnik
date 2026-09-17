@@ -414,7 +414,9 @@ footer a{color:#D8A94A}
           </div>
           <div class="f"><label for="dek_case" data-i18n="dek_case"></label><select id="dek_case"></select></div>
           <div class="row2">
-            <div class="f"><label for="dek_prz" data-i18n="dek_prz_corr"></label><input id="dek_prz" type="number" step="1" value="0"></div>
+            <div class="f"><label for="dek_rab" data-i18n="dek_rab"></label><input id="dek_rab" type="number" min="0" step="1" value="0">
+              <span class="hint" id="dekRabHint"></span>
+            </div>
             <div class="f"><label for="dek_dop" data-i18n="dek_dop"></label>
               <select id="dek_dop"><option value="0" data-i18n-opt="no"></option><option value="1" data-i18n-opt="yes"></option></select>
             </div>
@@ -551,7 +553,8 @@ ru:{brand:"бухгалтерия и расчёт заработной плат�
  dek_period:"Расчётный период — 3 месяца перед датой начала отпуска",
  dek_case:"Случай", dek_rab:"Рабочих дней в отпуске", dek_dop:"Доплата до среднего от работодателя",
  dek_start:"Дата начала отпуска по бюллетеню", h_dek_start:"С этой даты календарь сам отсчитает дни отпуска, найдёт дату окончания и посчитает рабочие дни внутри периода.",
- dek_prz_corr:"Поправка на рабочие дни, ±", l_vg_zone:"Высокогорная или отдалённая труднодоступная зона",
+ dek_rab_hint:"Посчитано по производственному календарю: {n} рабочих дней из {k} календарных. Можно исправить, если у работника другой график.",
+ dek_rab_auto:"по производственному календарю", dek_rab_manual:"исправлено вручную", l_vg_zone:"Высокогорная или отдалённая труднодоступная зона",
  h_vg_zone:"Постановления Кабинета Министров № 398 и № 399. В этих зонах пособие считается по особым правилам.",
  rPeriod:"Период отпуска", rDniPrz:"Праздничных дней внутри периода", rDniRabOpl:"Рабочих дней к оплате",
  rB10:"За первые 10 рабочих дней", rB11:"С 11-го рабочего дня", rVgFull:"высокогорье — полный средний заработок",
@@ -645,7 +648,8 @@ kg:{brand:"бухгалтердик эсеп жана эмгек акы эсеп
  dek_period:"Эсептөө мезгили — өргүү башталганга чейинки 3 ай",
  dek_case:"Учур", dek_rab:"Өргүүдөгү иш күндөрү", dek_dop:"Иш берүүчүдөн орточого чейин кошумча",
  dek_start:"Бюллетень боюнча өргүүнүн башталган күнү", h_dek_start:"Ушул күндөн тартып календарь өргүү күндөрүн санап, аяктоо күнүн жана ичиндеги иш күндөрүн өзү аныктайт.",
- dek_prz_corr:"Иш күндөрүнө оңдоо, ±", l_vg_zone:"Бийик тоолуу же алыскы жетүүгө кыйын аймак",
+ dek_rab_hint:"Өндүрүштүк календарь боюнча: {k} календардык күндүн ичинен {n} иш күнү. Графиги башка болсо оңдосоңуз болот.",
+ dek_rab_auto:"өндүрүштүк календарь боюнча", dek_rab_manual:"кол менен оңдолгон", l_vg_zone:"Бийик тоолуу же алыскы жетүүгө кыйын аймак",
  h_vg_zone:"Министрлер Кабинетинин № 398 жана № 399 токтомдору. Бул аймактарда жөлөкпул өзгөчө эреже боюнча эсептелет.",
  rPeriod:"Өргүү мезгили", rDniPrz:"Мезгил ичиндеги майрам күндөрү", rDniRabOpl:"Төлөнүүчү иш күндөрү",
  rB10:"Алгачкы 10 иш күнү үчүн", rB11:"11-иш күнүнөн тартып", rVgFull:"бийик тоо — толук орточо эмгек акы",
@@ -739,7 +743,8 @@ en:{brand:"payroll and accounting services · Kyrgyz Republic",
  dek_period:"Reference period — 3 months before the leave",
  dek_case:"Case", dek_rab:"Working days within the leave", dek_dop:"Employer tops up to the average",
  dek_start:"Leave start date from the certificate", h_dek_start:"From this date the calendar counts the leave days, finds the end date and the working days inside the period.",
- dek_prz_corr:"Working-day correction, ±", l_vg_zone:"High-mountain or remote hard-to-reach zone",
+ dek_rab_hint:"Counted from the working calendar: {n} working days out of {k} calendar days. Correct it if the employee is on another schedule.",
+ dek_rab_auto:"from the working calendar", dek_rab_manual:"corrected manually", l_vg_zone:"High-mountain or remote hard-to-reach zone",
  h_vg_zone:"Cabinet of Ministers decrees No. 398 and No. 399. Benefits in these zones follow special rules.",
  rPeriod:"Leave period", rDniPrz:"Public holidays inside the period", rDniRabOpl:"Working days to pay",
  rB10:"First ten working days", rB11:"From the eleventh working day", rVgFull:"high mountains — full average earnings",
@@ -1184,8 +1189,11 @@ function calcDek(){
   const start=startDate();
   const end=addDays(start,dniKal);
   const sc=scanDays(start,dniKal);
-  const korr=val("dek_prz");
-  const dniRab=Math.max(0,sc.rab+korr);
+  const elRab=$("dek_rab");
+  if(elRab.dataset.ruchnoy!=="1") elRab.value=sc.rab;
+  let dniRab=Math.max(0,Math.min(val("dek_rab"),dniKal));
+  if(+elRab.value!==dniRab) elRab.value=dniRab;
+  $("dekRabHint").textContent=t.dek_rab_hint.replace("{n}",sc.rab).replace("{k}",dniKal);
   const dniR=Math.min(dniRab,DNEY_RAB), dniB=Math.max(0,dniRab-DNEY_RAB);
   const chastR=Math.round(sdz*dniR*100)/100;
   // бюджетная часть считается помесячно: 20 РП ÷ норма рабочих дней этого месяца × дни отпуска в нём
@@ -1211,7 +1219,7 @@ function calcDek(){
     lineTxt(t.rPeriod,fmtD(start)+" — "+fmtD(end),cs[0][LI[L]]+" · "+(vg?cs[4]:cs[3])[0]+" "+t.wBefore+" + "+(vg?cs[4]:cs[3])[1]+" "+t.wAfter+(vg?" · "+t.l_vg_zone.toLowerCase():"")),
     lineHTML(t.rDniKal,dniKal,""),
     lineHTML(t.rDniPrz,sc.prz,""),
-    lineHTML(t.rDniRabOpl,dniRab,korr?f(sc.rab)+" "+(korr>0?"+":"−")+" "+Math.abs(korr):""),
+    lineHTML(t.rDniRabOpl,dniRab,dniRab!==sc.rab?t.dek_rab_manual:t.dek_rab_auto),
     lineHTML(t.rChastRab,chastR,f(sdz)+" × "+dniR)
   ];
   if(vg){
@@ -1245,6 +1253,9 @@ function runAll(){
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>setTab(b.dataset.tab)));
 if($("dek_vg")) $("dek_vg").addEventListener("change",()=>{ fillDekCases(); calcDek(); });
 for(let i=1;i<=3;i++){ const el=$("dek_kal"+i); if(el) el.addEventListener("input",()=>{ el.dataset.ruchnoy="1"; }); }
+if($("dek_rab")) $("dek_rab").addEventListener("input",()=>{ $("dek_rab").dataset.ruchnoy="1"; });
+if($("dek_start")) $("dek_start").addEventListener("change",()=>{ const e=$("dek_rab"); if(e) e.dataset.ruchnoy=""; calcDek(); });
+if($("dek_case")) $("dek_case").addEventListener("change",()=>{ const e=$("dek_rab"); if(e) e.dataset.ruchnoy=""; calcDek(); });
 
 function setLang(x){
   L=x;
