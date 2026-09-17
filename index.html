@@ -548,7 +548,7 @@ ru:{brand:"бухгалтерия и расчёт заработной плат�
  bol_hint:"По каждому месяцу: начислено и фактически отработанные рабочие дни.",
  bol_stazh:"Общий трудовой стаж, лет", bol_dni:"Рабочих дней нетрудоспособности",
  dek_h:"Декретные", dek_sub:"пособие по беременности и родам",
- dek_period:"Расчётный период — 3 месяца перед отпуском",
+ dek_period:"Расчётный период — 3 месяца перед датой начала отпуска",
  dek_case:"Случай", dek_rab:"Рабочих дней в отпуске", dek_dop:"Доплата до среднего от работодателя",
  dek_start:"Дата начала отпуска по бюллетеню", h_dek_start:"С этой даты календарь сам отсчитает дни отпуска, найдёт дату окончания и посчитает рабочие дни внутри периода.",
  dek_prz_corr:"Поправка на рабочие дни, ±", l_vg_zone:"Высокогорная или отдалённая труднодоступная зона",
@@ -556,6 +556,7 @@ ru:{brand:"бухгалтерия и расчёт заработной плат�
  rPeriod:"Период отпуска", rDniPrz:"Праздничных дней внутри периода", rDniRabOpl:"Рабочих дней к оплате",
  rB10:"За первые 10 рабочих дней", rB11:"С 11-го рабочего дня", rVgFull:"высокогорье — полный средний заработок",
  rBudgetVg:"С 11-го дня из республиканского бюджета", wDo:"по", wAllDays:"за все рабочие дни", wBefore:"дней до родов", wAfter:"после",
+ wNorma:"раб. дней в месяце", wByMonths:"сумма по месяцам", wSrDen:"в среднем за день",
  bolLow:"зарплата не выше 100 расчётных показателей — 100% за все рабочие дни",
  yes:"Да", no:"Нет",
  rSdz:"Среднедневной заработок", rDney:"Расчётное количество дней", rDniOpl:"Дней к оплате",
@@ -641,7 +642,7 @@ kg:{brand:"бухгалтердик эсеп жана эмгек акы эсеп
  bol_hint:"Ар бир ай боюнча: чегерилген сумма жана иш жүзүндө иштелген иш күндөрү.",
  bol_stazh:"Жалпы эмгек стажы, жыл", bol_dni:"Эмгекке жарамсыздыктын иш күндөрү",
  dek_h:"Декрет", dek_sub:"кош бойлуулук жана төрөт боюнча жөлөкпул",
- dek_period:"Эсептөө мезгили — өргүүгө чейинки 3 ай",
+ dek_period:"Эсептөө мезгили — өргүү башталганга чейинки 3 ай",
  dek_case:"Учур", dek_rab:"Өргүүдөгү иш күндөрү", dek_dop:"Иш берүүчүдөн орточого чейин кошумча",
  dek_start:"Бюллетень боюнча өргүүнүн башталган күнү", h_dek_start:"Ушул күндөн тартып календарь өргүү күндөрүн санап, аяктоо күнүн жана ичиндеги иш күндөрүн өзү аныктайт.",
  dek_prz_corr:"Иш күндөрүнө оңдоо, ±", l_vg_zone:"Бийик тоолуу же алыскы жетүүгө кыйын аймак",
@@ -649,6 +650,7 @@ kg:{brand:"бухгалтердик эсеп жана эмгек акы эсеп
  rPeriod:"Өргүү мезгили", rDniPrz:"Мезгил ичиндеги майрам күндөрү", rDniRabOpl:"Төлөнүүчү иш күндөрү",
  rB10:"Алгачкы 10 иш күнү үчүн", rB11:"11-иш күнүнөн тартып", rVgFull:"бийик тоо — толук орточо эмгек акы",
  rBudgetVg:"11-күндөн тартып республикалык бюджеттен", wDo:"—", wAllDays:"бардык иш күндөрү үчүн", wBefore:"күн төрөткө чейин", wAfter:"кийин",
+ wNorma:"айдагы иш күнү", wByMonths:"айлар боюнча жыйынды", wSrDen:"күнүнө орточо",
  bolLow:"эмгек акы 100 эсептик көрсөткүчтөн ашпайт — бардык иш күндөрүнө 100%",
  yes:"Ооба", no:"Жок",
  rSdz:"Орточо күндүк эмгек акы", rDney:"Эсептик күндөрдүн саны", rDniOpl:"Төлөнүүчү күндөр",
@@ -742,6 +744,7 @@ en:{brand:"payroll and accounting services · Kyrgyz Republic",
  rPeriod:"Leave period", rDniPrz:"Public holidays inside the period", rDniRabOpl:"Working days to pay",
  rB10:"First ten working days", rB11:"From the eleventh working day", rVgFull:"high mountains — full average earnings",
  rBudgetVg:"From day eleven, republican budget", wDo:"to", wAllDays:"for every working day", wBefore:"days before birth", wAfter:"after",
+ wNorma:"working days in the month", wByMonths:"sum of the months", wSrDen:"average per day",
  bolLow:"salary up to 100 calculation indices — 100% for every working day",
  yes:"Yes", no:"No",
  rSdz:"Average daily pay", rDney:"Calculated days", rDniOpl:"Days to pay",
@@ -1028,6 +1031,43 @@ function scanDays(start,days){
   return {rab:rab, prz:prz};
 }
 function addDays(start,days){ const d=new Date(start.getTime()); d.setDate(d.getDate()+days-1); return d; }
+function normaMes(y,m){          // норма рабочих дней месяца по производственному календарю
+  let n=0; const d=new Date(y,m,1);
+  while(d.getMonth()===m){ const w=d.getDay(); if(w!==0&&w!==6&&!isHoliday(d)) n++; d.setDate(d.getDate()+1); }
+  return n;
+}
+function monthDays(start,days,skip,limit){   // рабочие дни отпуска по месяцам, минуя первые skip дней
+  const out=[]; const d=new Date(start.getTime()); let idx=0, taken=0;
+  for(let i=0;i<days&&taken<limit;i++){
+    const w=d.getDay();
+    if(w!==0&&w!==6&&!isHoliday(d)){
+      idx++;
+      if(idx>skip){
+        const y=d.getFullYear(), m=d.getMonth();
+        let row=out[out.length-1];
+        if(!row||row.y!==y||row.m!==m){ row={y:y,m:m,dni:0,norma:normaMes(y,m)}; out.push(row); }
+        row.dni++; taken++;
+      }
+    }
+    d.setDate(d.getDate()+1);
+  }
+  return out;
+}
+function dekPeriodLabels(){
+  const start=startDate();
+  for(let i=1;i<=3;i++){
+    const d=new Date(start.getFullYear(),start.getMonth()-(4-i),1);
+    const lab=document.querySelector('#paneDek [data-i18n="m'+i+'"]');
+    if(lab) lab.textContent=MONTHS[L][d.getMonth()]+" "+d.getFullYear();
+    const inp=$("dek_kal"+i);
+    if(inp&&inp.dataset.ruchnoy!=="1") inp.value=normaMes(d.getFullYear(),d.getMonth());
+  }
+}
+const MONTHS={
+ ru:["январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"],
+ kg:["январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"],
+ en:["January","February","March","April","May","June","July","August","September","October","November","December"]
+};
 const fmtD=d=>String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0")+"."+d.getFullYear();
 function startDate(){
   const el=$("dek_start");
@@ -1134,6 +1174,7 @@ function fillDekCases(){
 
 function calcDek(){
   const t=T[L];
+  dekPeriodLabels();
   let summa=0, rab=0;
   for(let i=1;i<=3;i++){ summa+=mv("dek","nach",i); rab+=mv("dek","kal",i); }
   const sdz=rab?Math.round(summa/rab*100)/100:0;
@@ -1147,9 +1188,21 @@ function calcDek(){
   const dniRab=Math.max(0,sc.rab+korr);
   const dniR=Math.min(dniRab,DNEY_RAB), dniB=Math.max(0,dniRab-DNEY_RAB);
   const chastR=Math.round(sdz*dniR*100)/100;
-  const stavkaB=vg?sdz:Math.round(POS_DEK/RAB_MES*100)/100;
-  const chastB=Math.round(stavkaB*dniB*100)/100;
-  const dopl=(!vg&&$("dek_dop").value==="1")?Math.round(Math.max(0,(sdz-stavkaB)*dniB)*100)/100:0;
+  // бюджетная часть считается помесячно: 20 РП ÷ норма рабочих дней этого месяца × дни отпуска в нём
+  const ms=monthDays(start,dniKal,DNEY_RAB,dniB);
+  let chastB=0, mesRows=[];
+  if(vg){
+    chastB=Math.round(sdz*dniB*100)/100;
+  }else{
+    ms.forEach(m=>{
+      const sum=Math.round(POS_DEK*m.dni/m.norma*100)/100;
+      chastB+=sum;
+      mesRows.push(lineHTML(MONTHS[L][m.m]+" "+m.y,sum,f(POS_DEK)+" ÷ "+m.norma+" "+t.wNorma+" × "+m.dni+" "+t.wDays));
+    });
+    chastB=Math.round(chastB*100)/100;
+  }
+  const stavkaB=vg?sdz:(dniB?Math.round(chastB/dniB*100)/100:0);
+  const dopl=(!vg&&$("dek_dop").value==="1")?Math.round(Math.max(0,sdz*dniB-chastB)*100)/100:0;
   const nach=Math.round((chastR+chastB+dopl)*100)/100;
   const rows=[
     lineHTML(t.rZarab,summa,""),
@@ -1164,9 +1217,10 @@ function calcDek(){
   if(vg){
     rows.push(lineHTML(t.rBudgetVg,chastB,dniB?f(sdz)+" × "+dniB+" · "+t.rVgFull:"—"));
   }else{
-    rows.push(lineHTML(t.rStavkaBud,stavkaB,f(POS_DEK)+" ÷ "+f(RAB_MES)));
-    rows.push(lineHTML(t.rChastBud,chastB,dniB?f(stavkaB)+" × "+dniB:"—"));
-    rows.push(lineHTML(t.rDopl,dopl,dopl?f(sdz-stavkaB)+" × "+dniB:"—"));
+    mesRows.forEach(x=>rows.push(x));
+    rows.push(lineHTML(t.rChastBud,chastB,dniB?t.wByMonths:"—"));
+    rows.push(lineHTML(t.rStavkaBud,stavkaB,dniB?f(chastB)+" ÷ "+dniB+" "+t.wDays:"—"));
+    rows.push(lineHTML(t.rDopl,dopl,dopl?f(sdz)+" × "+dniB+" − "+f(chastB):"—"));
   }
   rows.push(lineHTML(t.rPosob,nach,"","tot"));
   $("dekLines").innerHTML=rows.join("");
@@ -1190,6 +1244,7 @@ function runAll(){
 }
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>setTab(b.dataset.tab)));
 if($("dek_vg")) $("dek_vg").addEventListener("change",()=>{ fillDekCases(); calcDek(); });
+for(let i=1;i<=3;i++){ const el=$("dek_kal"+i); if(el) el.addEventListener("input",()=>{ el.dataset.ruchnoy="1"; }); }
 
 function setLang(x){
   L=x;
