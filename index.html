@@ -379,6 +379,10 @@ footer a{color:#D8A94A}
             <div class="f"><label for="bol_stazh" data-i18n="bol_stazh"></label><input id="bol_stazh" type="number" min="0" step="0.5" value="6"></div>
             <div class="f"><label for="bol_dni" data-i18n="bol_dni"></label><input id="bol_dni" type="number" min="0" step="1" value="10"></div>
           </div>
+          <div class="f"><label for="bol_vg" data-i18n="l_vg_zone"></label>
+            <select id="bol_vg"><option value="0" data-i18n-opt="no"></option><option value="1" data-i18n-opt="yes"></option></select>
+            <span class="hint" data-i18n="h_vg_zone"></span>
+          </div>
         </div>
       </div>
     </section>
@@ -400,9 +404,17 @@ footer a{color:#D8A94A}
             <div class="mrow"><span class="mlab" data-i18n="m1"></span><input id="dek_nach1" type="number" min="0" step="0.01" value="25000" aria-label="начислено"><input id="dek_kal1" type="number" min="1" step="1" value="22" aria-label="дни"><input id="dek_prz1" type="number" min="0" step="1" value="0" aria-label="праздничные"></div><div class="mrow"><span class="mlab" data-i18n="m2"></span><input id="dek_nach2" type="number" min="0" step="0.01" value="25000" aria-label="начислено"><input id="dek_kal2" type="number" min="1" step="1" value="22" aria-label="дни"><input id="dek_prz2" type="number" min="0" step="1" value="0" aria-label="праздничные"></div><div class="mrow"><span class="mlab" data-i18n="m3"></span><input id="dek_nach3" type="number" min="0" step="0.01" value="25000" aria-label="начислено"><input id="dek_kal3" type="number" min="1" step="1" value="22" aria-label="дни"><input id="dek_prz3" type="number" min="0" step="1" value="0" aria-label="праздничные"></div>
             <span class="hint" data-i18n="bol_hint"></span>
           </div>
+          <div class="row2">
+            <div class="f"><label for="dek_start" data-i18n="dek_start"></label><input id="dek_start" type="date">
+              <span class="hint" data-i18n="h_dek_start"></span>
+            </div>
+            <div class="f"><label for="dek_vg" data-i18n="l_vg_zone"></label>
+              <select id="dek_vg"><option value="0" data-i18n-opt="no"></option><option value="1" data-i18n-opt="yes"></option></select>
+            </div>
+          </div>
           <div class="f"><label for="dek_case" data-i18n="dek_case"></label><select id="dek_case"></select></div>
           <div class="row2">
-            <div class="f"><label for="dek_rab" data-i18n="dek_rab"></label><input id="dek_rab" type="number" min="0" step="1" value="90"></div>
+            <div class="f"><label for="dek_prz" data-i18n="dek_prz_corr"></label><input id="dek_prz" type="number" step="1" value="0"></div>
             <div class="f"><label for="dek_dop" data-i18n="dek_dop"></label>
               <select id="dek_dop"><option value="0" data-i18n-opt="no"></option><option value="1" data-i18n-opt="yes"></option></select>
             </div>
@@ -538,6 +550,13 @@ ru:{brand:"бухгалтерия и расчёт заработной плат�
  dek_h:"Декретные", dek_sub:"пособие по беременности и родам",
  dek_period:"Расчётный период — 3 месяца перед отпуском",
  dek_case:"Случай", dek_rab:"Рабочих дней в отпуске", dek_dop:"Доплата до среднего от работодателя",
+ dek_start:"Дата начала отпуска по бюллетеню", h_dek_start:"С этой даты календарь сам отсчитает дни отпуска, найдёт дату окончания и посчитает рабочие дни внутри периода.",
+ dek_prz_corr:"Поправка на рабочие дни, ±", l_vg_zone:"Высокогорная или отдалённая труднодоступная зона",
+ h_vg_zone:"Постановления Кабинета Министров № 398 и № 399. В этих зонах пособие считается по особым правилам.",
+ rPeriod:"Период отпуска", rDniPrz:"Праздничных дней внутри периода", rDniRabOpl:"Рабочих дней к оплате",
+ rB10:"За первые 10 рабочих дней", rB11:"С 11-го рабочего дня", rVgFull:"высокогорье — полный средний заработок",
+ rBudgetVg:"С 11-го дня из республиканского бюджета", wDo:"по", wAllDays:"за все рабочие дни", wBefore:"дней до родов", wAfter:"после",
+ bolLow:"зарплата не выше 100 расчётных показателей — 100% за все рабочие дни",
  yes:"Да", no:"Нет",
  rSdz:"Среднедневной заработок", rDney:"Расчётное количество дней", rDniOpl:"Дней к оплате",
  rOtpNach:"Начислено отпускных", rVzn10:"Страховые взносы (10%)", rVych:"Стандартные вычеты",
@@ -546,8 +565,8 @@ ru:{brand:"бухгалтерия и расчёт заработной плат�
  rChastRab:"За счёт работодателя", rChastBud:"За счёт бюджета", rStavkaBud:"Дневная ставка бюджета",
  rDopl:"Доплата работодателя", rPosob:"Всего пособие", rDniKal:"Календарных дней отпуска",
  otpNote:"Отпускные — оплата труда: облагаются подоходным налогом и страховыми взносами. Нерабочие праздничные дни в число дней отпуска не включаются (статья 68 Трудового кодекса).",
- bolNote:"Первые 10 рабочих дней оплачивает работодатель по проценту от стажа, с 11-го — республиканский бюджет фиксированной суммой 10 000 сом в месяц. Пособие подоходным налогом и взносами не облагается.",
- dekNote:"Первые 10 рабочих дней — 100% среднего заработка от работодателя, далее пособие из бюджета 2 000 сом в месяц. Продолжительность: 126 дней обычные роды, 140 при осложнённых и двойне, до 180 в высокогорье.",
+ bolNote:"Пособие по временной нетрудоспособности целиком выплачивает работодатель — пункт 45 Положения. Первые 10 рабочих дней — 60, 80 или 100% по стажу, с 11-го — из расчёта 100 расчётных показателей (10 000 сом) в месяц. Пункт 37 подпункт 1: 100% за все рабочие дни получают работники высокогорных и отдалённых зон, работники с зарплатой не выше 100 расчётных показателей, пострадавшие от трудового увечья и другие льготные категории.",
+ dekNote:"Первые 10 рабочих дней — 100% среднего заработка за счёт работодателя, с 11-го рабочего дня — 20 расчётных показателей (2 000 сом) в месяц из республиканского бюджета. <b>В высокогорных и отдалённых труднодоступных зонах с 11-го рабочего дня бюджет платит полный средний дневной заработок за все оставшиеся рабочие дни</b> — пункт 63 подпункт 3 Положения. Дни отпуска: 126 обычные роды, 140 осложнённые и двойня; в высокогорье 140, 156 и 180 — пункт 61.",
  tabs_note:"Каждая вкладка считает отдельно: на экране только выбранный расчёт, данные других вкладок в него не попадают.",
  l_net:"К выдаче на руки", notApply:"Не применяется",
  smzFull:"СМЗ полная", smzVzn:"для взносов", coefOf:"коэффициент",
@@ -624,6 +643,13 @@ kg:{brand:"бухгалтердик эсеп жана эмгек акы эсеп
  dek_h:"Декрет", dek_sub:"кош бойлуулук жана төрөт боюнча жөлөкпул",
  dek_period:"Эсептөө мезгили — өргүүгө чейинки 3 ай",
  dek_case:"Учур", dek_rab:"Өргүүдөгү иш күндөрү", dek_dop:"Иш берүүчүдөн орточого чейин кошумча",
+ dek_start:"Бюллетень боюнча өргүүнүн башталган күнү", h_dek_start:"Ушул күндөн тартып календарь өргүү күндөрүн санап, аяктоо күнүн жана ичиндеги иш күндөрүн өзү аныктайт.",
+ dek_prz_corr:"Иш күндөрүнө оңдоо, ±", l_vg_zone:"Бийик тоолуу же алыскы жетүүгө кыйын аймак",
+ h_vg_zone:"Министрлер Кабинетинин № 398 жана № 399 токтомдору. Бул аймактарда жөлөкпул өзгөчө эреже боюнча эсептелет.",
+ rPeriod:"Өргүү мезгили", rDniPrz:"Мезгил ичиндеги майрам күндөрү", rDniRabOpl:"Төлөнүүчү иш күндөрү",
+ rB10:"Алгачкы 10 иш күнү үчүн", rB11:"11-иш күнүнөн тартып", rVgFull:"бийик тоо — толук орточо эмгек акы",
+ rBudgetVg:"11-күндөн тартып республикалык бюджеттен", wDo:"—", wAllDays:"бардык иш күндөрү үчүн", wBefore:"күн төрөткө чейин", wAfter:"кийин",
+ bolLow:"эмгек акы 100 эсептик көрсөткүчтөн ашпайт — бардык иш күндөрүнө 100%",
  yes:"Ооба", no:"Жок",
  rSdz:"Орточо күндүк эмгек акы", rDney:"Эсептик күндөрдүн саны", rDniOpl:"Төлөнүүчү күндөр",
  rOtpNach:"Өргүү акысы чегерилди", rVzn10:"Камсыздандыруу төгүмдөрү (10%)", rVych:"Стандарттык чегерүүлөр",
@@ -632,8 +658,8 @@ kg:{brand:"бухгалтердик эсеп жана эмгек акы эсеп
  rChastRab:"Иш берүүчүнүн эсебинен", rChastBud:"Бюджеттин эсебинен", rStavkaBud:"Бюджеттин күндүк ставкасы",
  rDopl:"Иш берүүчүнүн кошумчасы", rPosob:"Бардыгы жөлөкпул", rDniKal:"Өргүүнүн календардык күндөрү",
  otpNote:"Өргүү акысы — эмгек акы: киреше салыгы жана камсыздандыруу төгүмдөрү салынат. Майрам күндөрү өргүү күндөрүнө кирбейт (Эмгек кодексинин 68-беренеси).",
- bolNote:"Алгачкы 10 иш күнүн иш берүүчү стаж боюнча пайыз менен төлөйт, 11-күндөн тартып — республикалык бюджет айына 10 000 сом туруктуу сумма менен. Жөлөкпулга киреше салыгы жана төгүм салынбайт.",
- dekNote:"Алгачкы 10 иш күнү — иш берүүчүдөн орточо эмгек акынын 100 пайызы, андан ары бюджеттен айына 2 000 сом. Узактыгы: кадимки төрөттө 126 күн, татаалдашканда жана эгиз төрөттө 140, бийик тоодо 180 күнгө чейин.",
+ bolNote:"Эмгекке жарамсыздык боюнча жөлөкпулду толугу менен иш берүүчү төлөйт — Жобонун 45-пункту. Алгачкы 10 иш күнү стажга жараша 60, 80 же 100 пайыз, 11-күндөн тартып — айына 100 эсептик көрсөткүч (10 000 сом) эсебинен. 37-пункттун 1-пунктчасы: бийик тоолуу жана алыскы аймактарда иштегендер, эмгек акысы 100 эсептик көрсөткүчтөн ашпагандар жана башка жеңилдиктүү категориялар бардык иш күндөрүнө 100 пайыз алышат.",
+ dekNote:"Алгачкы 10 иш күнү — иш берүүчүдөн орточо эмгек акынын 100 пайызы, 11-иш күнүнөн тартып — республикалык бюджеттен айына 20 эсептик көрсөткүч (2 000 сом). <b>Бийик тоолуу жана алыскы жетүүгө кыйын аймактарда 11-иш күнүнөн тартып бюджет калган бардык иш күндөрүнө толук орточо күндүк эмгек акыны төлөйт</b> — Жобонун 63-пунктунун 3-пунктчасы. Өргүү күндөрү: кадимки төрөт 126, татаалдашкан жана эгиз 140; бийик тоодо 140, 156 жана 180 — 61-пункт.",
  tabs_note:"Ар бир өтмөк өзүнчө эсептейт: экранда тандалган эсеп гана, башка өтмөктөрдүн маалыматы кошулбайт.",
  l_net:"Колго берилет", notApply:"Колдонулбайт",
  smzFull:"толук ОАЭА", smzVzn:"төгүмдөр үчүн", coefOf:"коэффициент",
@@ -710,6 +736,13 @@ en:{brand:"payroll and accounting services · Kyrgyz Republic",
  dek_h:"Maternity", dek_sub:"pregnancy and childbirth benefit",
  dek_period:"Reference period — 3 months before the leave",
  dek_case:"Case", dek_rab:"Working days within the leave", dek_dop:"Employer tops up to the average",
+ dek_start:"Leave start date from the certificate", h_dek_start:"From this date the calendar counts the leave days, finds the end date and the working days inside the period.",
+ dek_prz_corr:"Working-day correction, ±", l_vg_zone:"High-mountain or remote hard-to-reach zone",
+ h_vg_zone:"Cabinet of Ministers decrees No. 398 and No. 399. Benefits in these zones follow special rules.",
+ rPeriod:"Leave period", rDniPrz:"Public holidays inside the period", rDniRabOpl:"Working days to pay",
+ rB10:"First ten working days", rB11:"From the eleventh working day", rVgFull:"high mountains — full average earnings",
+ rBudgetVg:"From day eleven, republican budget", wDo:"to", wAllDays:"for every working day", wBefore:"days before birth", wAfter:"after",
+ bolLow:"salary up to 100 calculation indices — 100% for every working day",
  yes:"Yes", no:"No",
  rSdz:"Average daily pay", rDney:"Calculated days", rDniOpl:"Days to pay",
  rOtpNach:"Leave pay accrued", rVzn10:"Social contributions (10%)", rVych:"Standard deductions",
@@ -718,8 +751,8 @@ en:{brand:"payroll and accounting services · Kyrgyz Republic",
  rChastRab:"Paid by the employer", rChastBud:"Paid by the budget", rStavkaBud:"Daily budget rate",
  rDopl:"Employer top-up", rPosob:"Total benefit", rDniKal:"Calendar days of leave",
  otpNote:"Leave pay is wages: income tax and social contributions apply. Public holidays are not counted as leave days (article 68 of the Labour Code).",
- bolNote:"The employer pays the first 10 working days at the rate set by length of service; from day 11 the republican budget pays a fixed 10,000 KGS per month. The benefit carries no income tax or contributions.",
- dekNote:"The first 10 working days are paid by the employer at 100% of average pay, then the budget pays 2,000 KGS per month. Duration: 126 days for a normal birth, 140 for complications or twins, up to 180 in the highlands.",
+ bolNote:"Sick pay is funded entirely by the employer — clause 45 of the Regulation. The first 10 working days are paid at 60, 80 or 100% by length of service; from day 11 the rate is 100 calculation indices (10,000 KGS) per month. Clause 37(1) gives 100% for every working day to staff in high-mountain and remote zones, to those earning up to 100 calculation indices, to victims of work injury and to other privileged categories.",
+ dekNote:"The first 10 working days are paid by the employer at 100% of average pay; from the eleventh working day the republican budget pays 20 calculation indices (2,000 KGS) per month. <b>In high-mountain and remote hard-to-reach zones the budget instead pays the full average daily earnings for every remaining working day</b> — clause 63(3). Leave length: 126 days for a normal birth, 140 for complications or twins; in the highlands 140, 156 and 180 — clause 61.",
  tabs_note:"Each tab calculates separately: only the selected one is shown, and data from the other tabs never enters it.",
  l_net:"Net pay", notApply:"Not applicable",
  smzFull:"average wage, full", smzVzn:"for contributions", coefOf:"coefficient",
@@ -977,12 +1010,34 @@ document.querySelectorAll(".mode").forEach(b=>b.addEventListener("click",()=>set
 
 // ═══════════ отпускные, больничный, декретные ═══════════
 const DEK_CASES=[
- [["Обычные роды (70 до + 56 после)","Кадимки төрөт (70 + 56)","Normal birth (70 + 56)"],126],
- [["Осложнённые роды","Татаалдашкан төрөт","Complicated birth"],140],
- [["Рождение двух и более детей","Эки жана андан көп бала","Twins or more"],140],
- [["Высокогорная зона, обычные роды","Бийик тоо, кадимки төрөт","Highlands, normal birth"],140],
- [["Высокогорная зона, осложнённые роды","Бийик тоо, татаалдашкан төрөт","Highlands, complicated birth"],180]
+ [["Обычные роды","Кадимки төрөт","Normal birth"],126,140,[70,56],[70,70]],
+ [["Осложнённые роды","Татаалдашкан төрөт","Complicated birth"],140,156,[70,70],[70,86]],
+ [["Рождение двух и более детей","Эки жана андан көп бала","Twins or more"],140,180,[70,70],[70,110]]
 ];
+// ── производственный календарь: выходные суббота-воскресенье и нерабочие праздники КР ──
+const HOL_FIX=["01-01","01-07","02-23","03-08","03-21","04-07","05-01","05-05","05-09","08-31","11-07","11-08"];
+const HOL_MOV={2025:["03-30","06-06"],2026:["03-20","05-27"],2027:["03-09","05-16"],2028:["02-26","05-05"]};
+const md=d=>String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+function isHoliday(d){ const m=md(d); return HOL_FIX.indexOf(m)>=0 || (HOL_MOV[d.getFullYear()]||[]).indexOf(m)>=0; }
+function scanDays(start,days){
+  let rab=0, prz=0; const d=new Date(start.getTime());
+  for(let i=0;i<days;i++){ const w=d.getDay();
+    if(w!==0&&w!==6){ if(isHoliday(d)) prz++; else rab++; }
+    d.setDate(d.getDate()+1); }
+  return {rab:rab, prz:prz};
+}
+function addDays(start,days){ const d=new Date(start.getTime()); d.setDate(d.getDate()+days-1); return d; }
+const fmtD=d=>String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0")+"."+d.getFullYear();
+function startDate(){
+  const el=$("dek_start");
+  if(!el.value){ const t=new Date(); el.value=t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0"); }
+  const p=el.value.split("-");
+  return new Date(+p[0],+p[1]-1,+p[2]);
+}
+function lineTxt(ttl,txt,why,cls){
+  return '<div class="line '+(cls||"")+'"><span class="t">'+ttl+'</span><span class="v">'+txt+"</span>"
+    +(why?'<span class="why">'+why+"</span>":"")+"</div>";
+}
 const POS_BOL=10000, POS_DEK=2000, RAB_MES=21.2, KOEF_KAL=29.6, DNEY_RAB=10;
 const mv=(p,k,i)=>val(p+"_"+k+i);
 
@@ -1030,25 +1085,36 @@ function calcBol(){
   for(let i=1;i<=3;i++){ summa+=mv("bol","nach",i); rab+=mv("bol","kal",i); }
   const sdz=rab?Math.round(summa/rab*100)/100:0;
   const st=val("bol_stazh");
-  const proc=st<5?.6:st<8?.8:1;
+  const vg=$("bol_vg")&&$("bol_vg").value==="1";
+  const zpMes=Math.round(summa/3*100)/100;
+  const polnoe=vg||zpMes<=POS_BOL;                 // п. 37 подп. 1 и п. 40 Положения
+  const proc=polnoe?1:(st<5?.6:st<8?.8:1);
   const dnevn=Math.round(sdz*proc*100)/100;
   const dni=val("bol_dni");
-  const dniR=Math.min(dni,DNEY_RAB), dniB=Math.max(0,dni-DNEY_RAB);
-  const chastR=Math.round(dnevn*dniR*100)/100;
-  const stavkaB=Math.round(POS_BOL/RAB_MES*100)/100;
-  const chastB=Math.round(Math.min(stavkaB,dnevn)*dniB*100)/100;
-  const nach=Math.round((chastR+chastB)*100)/100;
-  $("bolLines").innerHTML=[
+  const rows=[
     lineHTML(t.rZarab,summa,""),
     lineHTML(t.rRabDni,rab,""),
-    lineHTML(t.rSdz,sdz,f(summa)+" ÷ "+f(rab)),
-    lineHTML(t.rProc,proc,pct(proc)+" · "+t.bol_stazh.toLowerCase()+" "+st),
-    lineHTML(t.rDnevn,dnevn,f(sdz)+" × "+pct(proc)),
-    lineHTML(t.rChastRab,chastR,f(dnevn)+" × "+dniR),
-    lineHTML(t.rStavkaBud,stavkaB,f(POS_BOL)+" ÷ "+f(RAB_MES)),
-    lineHTML(t.rChastBud,chastB,dniB?f(Math.min(stavkaB,dnevn))+" × "+dniB:"—"),
-    lineHTML(t.rPosob,nach,"","tot")
-  ].join("");
+    lineHTML(t.rSdz,sdz,f(summa)+" ÷ "+f(rab))
+  ];
+  let nach;
+  if(polnoe){
+    nach=Math.round(sdz*dni*100)/100;
+    rows.push(lineHTML(t.rProc,1,vg?t.rVgFull:t.bolLow));
+    rows.push(lineHTML(t.rB10,nach,f(sdz)+" × "+dni+" · "+t.wAllDays));
+  }else{
+    const dniR=Math.min(dni,DNEY_RAB), dniB=Math.max(0,dni-DNEY_RAB);
+    const chastR=Math.round(dnevn*dniR*100)/100;
+    const stavkaB=Math.round(POS_BOL/RAB_MES*100)/100;
+    const chastB=Math.round(stavkaB*dniB*100)/100;
+    nach=Math.round((chastR+chastB)*100)/100;
+    rows.push(lineHTML(t.rProc,proc,pct(proc)+" · "+t.bol_stazh.toLowerCase()+" "+st));
+    rows.push(lineHTML(t.rDnevn,dnevn,f(sdz)+" × "+pct(proc)));
+    rows.push(lineHTML(t.rB10,chastR,f(dnevn)+" × "+dniR));
+    rows.push(lineHTML(t.rStavkaBud,stavkaB,f(POS_BOL)+" ÷ "+f(RAB_MES)));
+    rows.push(lineHTML(t.rB11,chastB,dniB?f(stavkaB)+" × "+dniB:"—"));
+  }
+  rows.push(lineHTML(t.rPosob,nach,"","tot"));
+  $("bolLines").innerHTML=rows.join("");
   $("bolNet").textContent=f(nach);
   $("bolNote").innerHTML=t.bolNote;
 }
@@ -1056,7 +1122,8 @@ function calcBol(){
 function fillDekCases(){
   const sel=$("dek_case"), keep=sel.value||"0";
   sel.innerHTML="";
-  DEK_CASES.forEach((c,i)=>sel.add(new Option(c[0][LI[L]]+" — "+c[1],i)));
+  const vgSel=$("dek_vg"), vg=vgSel&&vgSel.value==="1";
+  DEK_CASES.forEach((c,i)=>sel.add(new Option(c[0][LI[L]]+" — "+(vg?c[2]:c[1]),i)));
   sel.value=keep;
   const dopSel=$("dek_dop"), keepD=dopSel.value||"0";
   dopSel.innerHTML="";
@@ -1070,24 +1137,38 @@ function calcDek(){
   for(let i=1;i<=3;i++){ summa+=mv("dek","nach",i); rab+=mv("dek","kal",i); }
   const sdz=rab?Math.round(summa/rab*100)/100:0;
   const cs=DEK_CASES[+$("dek_case").value||0];
-  const dniRab=val("dek_rab");
+  const vg=$("dek_vg")&&$("dek_vg").value==="1";
+  const dniKal=vg?cs[2]:cs[1];
+  const start=startDate();
+  const end=addDays(start,dniKal);
+  const sc=scanDays(start,dniKal);
+  const korr=val("dek_prz");
+  const dniRab=Math.max(0,sc.rab+korr);
   const dniR=Math.min(dniRab,DNEY_RAB), dniB=Math.max(0,dniRab-DNEY_RAB);
   const chastR=Math.round(sdz*dniR*100)/100;
-  const stavkaB=Math.round(POS_DEK/RAB_MES*100)/100;
+  const stavkaB=vg?sdz:Math.round(POS_DEK/RAB_MES*100)/100;
   const chastB=Math.round(stavkaB*dniB*100)/100;
-  const dopl=$("dek_dop").value==="1"?Math.round(Math.max(0,(sdz-stavkaB)*dniB)*100)/100:0;
+  const dopl=(!vg&&$("dek_dop").value==="1")?Math.round(Math.max(0,(sdz-stavkaB)*dniB)*100)/100:0;
   const nach=Math.round((chastR+chastB+dopl)*100)/100;
-  $("dekLines").innerHTML=[
+  const rows=[
     lineHTML(t.rZarab,summa,""),
     lineHTML(t.rRabDni,rab,""),
     lineHTML(t.rSdz,sdz,f(summa)+" ÷ "+f(rab)),
-    lineHTML(t.rDniKal,cs[1],cs[0][LI[L]]),
-    lineHTML(t.rChastRab,chastR,f(sdz)+" × "+dniR),
-    lineHTML(t.rStavkaBud,stavkaB,f(POS_DEK)+" ÷ "+f(RAB_MES)),
-    lineHTML(t.rChastBud,chastB,dniB?f(stavkaB)+" × "+dniB:"—"),
-    lineHTML(t.rDopl,dopl,dopl?f(sdz-stavkaB)+" × "+dniB:"—"),
-    lineHTML(t.rPosob,nach,"","tot")
-  ].join("");
+    lineTxt(t.rPeriod,fmtD(start)+" — "+fmtD(end),cs[0][LI[L]]+" · "+(vg?cs[4]:cs[3])[0]+" "+t.wBefore+" + "+(vg?cs[4]:cs[3])[1]+" "+t.wAfter+(vg?" · "+t.l_vg_zone.toLowerCase():"")),
+    lineHTML(t.rDniKal,dniKal,""),
+    lineHTML(t.rDniPrz,sc.prz,""),
+    lineHTML(t.rDniRabOpl,dniRab,korr?f(sc.rab)+" "+(korr>0?"+":"−")+" "+Math.abs(korr):""),
+    lineHTML(t.rChastRab,chastR,f(sdz)+" × "+dniR)
+  ];
+  if(vg){
+    rows.push(lineHTML(t.rBudgetVg,chastB,dniB?f(sdz)+" × "+dniB+" · "+t.rVgFull:"—"));
+  }else{
+    rows.push(lineHTML(t.rStavkaBud,stavkaB,f(POS_DEK)+" ÷ "+f(RAB_MES)));
+    rows.push(lineHTML(t.rChastBud,chastB,dniB?f(stavkaB)+" × "+dniB:"—"));
+    rows.push(lineHTML(t.rDopl,dopl,dopl?f(sdz-stavkaB)+" × "+dniB:"—"));
+  }
+  rows.push(lineHTML(t.rPosob,nach,"","tot"));
+  $("dekLines").innerHTML=rows.join("");
   $("dekNet").textContent=f(nach);
   $("dekNote").innerHTML=t.dekNote;
 }
@@ -1107,6 +1188,7 @@ function runAll(){
   else calcDek();
 }
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>setTab(b.dataset.tab)));
+if($("dek_vg")) $("dek_vg").addEventListener("change",()=>{ fillDekCases(); calcDek(); });
 
 function setLang(x){
   L=x;
