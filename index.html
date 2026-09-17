@@ -845,6 +845,7 @@ function currentRk(){
 function renderStatic(){
   const t=T[L];
   document.querySelectorAll("[data-i18n]").forEach(el=>{ const v=t[el.dataset.i18n]; if(v!==undefined) el.innerHTML=v; });
+  document.querySelectorAll("[data-i18n-opt]").forEach(el=>{ const v=t[el.dataset.i18nOpt]; if(v!==undefined) el.textContent=v; });
   $("steps").innerHTML=t.steps.map(s=>'<div class="step"><div class="n">'+s[0]+'</div><h3>'+s[1]+'</h3><p>'+s[2]+'</p></div>').join("");
   $("law").innerHTML=t.law.map(r=>'<div><b>'+r[0]+'</b><span>'+r[1]+'</span></div>').join("");
   document.querySelectorAll(".lang").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===L)));
